@@ -1,0 +1,127 @@
+title: SDG&E TOU Bill Check
+views:
+  - title: TOU Bill Check
+    path: tou-bill-check
+    icon: mdi:cash-check
+    cards:
+      - type: entities
+        title: Billing period
+        entities:
+          - entity: input_datetime.tou_billing_start
+            name: Billing start
+          - entity: input_datetime.tou_billing_end
+            name: Billing end
+          - entity: sensor.tou_billing_period
+            name: Selected period
+
+      - type: entities
+        title: Current TOU rate
+        entities:
+          - entity: sensor.tou_period
+            name: Current period
+          - entity: sensor.sdg_e_delivery_rate
+            name: Delivery rate
+          - entity: sensor.sdg_e_generation_rate
+            name: Generation rate
+          - entity: sensor.sdg_e_total_import_rate
+            name: Total import rate
+
+      - type: grid
+        title: Imported energy today
+        columns: 2
+        square: false
+        cards:
+          - type: entity
+            entity: sensor.solar_imported_power_daily_peak
+            name: Peak import
+            icon: mdi:transmission-tower-import
+          - type: entity
+            entity: sensor.solar_imported_power_daily_offpeak
+            name: Off-peak import
+            icon: mdi:transmission-tower-import
+          - type: entity
+            entity: sensor.solar_house_consumption_daily_peak
+            name: Peak consumption
+            icon: mdi:home-lightning-bolt-outline
+          - type: entity
+            entity: sensor.solar_house_consumption_daily_offpeak
+            name: Off-peak consumption
+            icon: mdi:home-lightning-bolt-outline
+
+      - type: entities
+        title: Daily estimate
+        entities:
+          - entity: sensor.tou_import_cost_today
+            name: Estimated import cost today
+          - entity: sensor.solar_exported_power_daily
+            name: Exported energy today
+          - entity: sensor.solar_panel_production_daily
+            name: Solar production today
+          - entity: sensor.solar_lifetime_production
+            name: Lifetime production
+
+      - type: markdown
+        content: >-
+          This page estimates today's import cost from the available peak and
+          off-peak utility meters. Super off-peak history is not yet separated
+          into its own meter, so compare this estimate with the SDG&E bill.
+
+  - title: On-Peak
+    path: tou-on-peak
+    icon: mdi:weather-sunny
+    cards:
+      - type: entities
+        title: On-peak rate
+        entities:
+          - entity: input_number.sdge_generation_on_peak
+            name: Generation rate
+          - entity: sensor.sdg_e_delivery_rate
+            name: Delivery rate
+          - entity: sensor.sdg_e_total_import_rate
+            name: Total import rate
+
+      - type: entities
+        title: On-peak energy today
+        entities:
+          - entity: sensor.solar_imported_power_daily_peak
+            name: Grid import
+          - entity: sensor.solar_house_consumption_daily_peak
+            name: Estimated house consumption
+
+  - title: Off-Peak
+    path: tou-off-peak
+    icon: mdi:weather-sunset-down
+    cards:
+      - type: entities
+        title: Off-peak rate
+        entities:
+          - entity: input_number.sdge_generation_off_peak
+            name: Generation rate
+          - entity: sensor.sdg_e_delivery_rate
+            name: Delivery rate
+
+      - type: entities
+        title: Off-peak energy today
+        entities:
+          - entity: sensor.solar_imported_power_daily_offpeak
+            name: Grid import
+          - entity: sensor.solar_house_consumption_daily_offpeak
+            name: Estimated house consumption
+
+  - title: Super Off-Peak
+    path: tou-super-off-peak
+    icon: mdi:weather-night
+    cards:
+      - type: entities
+        title: Super off-peak rate
+        entities:
+          - entity: input_number.sdge_generation_super_off_peak
+            name: Generation rate
+          - entity: sensor.sdg_e_delivery_rate
+            name: Delivery rate
+
+      - type: markdown
+        content: >-
+          Super off-peak is midnight-6:00 AM and 10:00 AM-2:00 PM on
+          weekdays, and midnight-2:00 PM on weekends and holidays. A
+          dedicated super off-peak utility meter is not configured yet.

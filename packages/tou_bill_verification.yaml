@@ -1,0 +1,109 @@
+input_datetime:
+  tou_billing_start:
+    name: TOU billing start
+    has_date: true
+    has_time: false
+    initial: "2026-06-28"
+  tou_billing_end:
+    name: TOU billing end
+    has_date: true
+    has_time: false
+    initial: "2026-07-27"
+
+input_number:
+  sdge_delivery_rate:
+    name: SDG&E delivery rate
+    min: 0
+    max: 2
+    step: 0.00001
+    unit_of_measurement: "$/kWh"
+    mode: box
+    initial: 0.31093
+  sdge_generation_on_peak:
+    name: SDG&E generation on-peak
+    min: 0
+    max: 2
+    step: 0.00001
+    unit_of_measurement: "$/kWh"
+    mode: box
+    initial: 0.20500
+  sdge_generation_off_peak:
+    name: SDG&E generation off-peak
+    min: 0
+    max: 2
+    step: 0.00001
+    unit_of_measurement: "$/kWh"
+    mode: box
+    initial: 0.16034
+  sdge_generation_super_off_peak:
+    name: SDG&E generation super off-peak
+    min: 0
+    max: 2
+    step: 0.00001
+    unit_of_measurement: "$/kWh"
+    mode: box
+    initial: 0.08518
+
+template:
+  - sensor:
+      - name: TOU period
+        unique_id: tou_period
+        state: >
+          {% set hour = now().hour %}
+          {% set weekend = now().isoweekday() in [6, 7] %}
+          {% if hour >= 16 and hour < 21 %}
+            on_peak
+          {% elif weekend and hour < 14 %}
+            super_off_peak
+          {% elif not weekend and (hour < 6 or (hour >= 10 and hour < 14)) %}
+            super_off_peak
+          {% else %}
+            off_peak
+          {% endif %}
+
+      - name: SDG&E delivery rate
+        unique_id: sdge_delivery_rate
+        default_entity_id: sensor.sdg_e_delivery_rate
+        unit_of_measurement: "$/kWh"
+        state: "{{ states('input_number.sdge_delivery_rate') }}"
+
+      - name: SDG&E generation rate
+        unique_id: sdge_generation_rate
+        default_entity_id: sensor.sdg_e_generation_rate
+        unit_of_measurement: "$/kWh"
+        state: >
+          {% set period = states('sensor.tou_period') %}
+          {% if period == 'on_peak' %}
+            {{ states('input_number.sdge_generation_on_peak') }}
+          {% elif period == 'super_off_peak' %}
+            {{ states('input_number.sdge_generation_super_off_peak') }}
+          {% else %}
+            {{ states('input_number.sdge_generation_off_peak') }}
+          {% endif %}
+
+      - name: SDG&E total import rate
+        unique_id: sdge_total_import_rate
+        default_entity_id: sensor.sdg_e_total_import_rate
+        unit_of_measurement: "$/kWh"
+        state: >
+          {{ (states('sensor.sdg_e_delivery_rate') | float(0) + states('sensor.sdg_e_generation_rate') | float(0)) | round(5) }}
+
+      - name: TOU billing period
+        unique_id: tou_billing_period
+        state: >
+          {{ states('input_datetime.tou_billing_start') }} through {{ states('input_datetime.tou_billing_end') }}
+        attributes:
+          start: "{{ states('input_datetime.tou_billing_start') }}"
+          end: "{{ states('input_datetime.tou_billing_end') }}"
+
+      - name: TOU import cost today
+        unique_id: tou_import_cost_today
+        unit_of_measurement: "$"
+        state: >
+          {% set peak = states('sensor.solar_imported_power_daily_peak') | float(0) %}
+          {% set off_peak = states('sensor.solar_imported_power_daily_offpeak') | float(0) %}
+          {% set peak_rate = states('input_number.sdge_delivery_rate') | float(0) + states('input_number.sdge_generation_on_peak') | float(0) %}
+          {% set off_peak_rate = states('input_number.sdge_delivery_rate') | float(0) + states('input_number.sdge_generation_off_peak') | float(0) %}
+          {{ (peak * peak_rate + off_peak * off_peak_rate) | round(2) }}
+        attributes:
+          note: "Daily estimate uses the available peak/off-peak utility meters. Super off-peak history requires a dedicated utility meter."
