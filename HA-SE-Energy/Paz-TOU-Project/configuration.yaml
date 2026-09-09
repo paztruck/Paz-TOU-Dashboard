@@ -1,0 +1,23 @@
+homeassistant:
+  name: "Paz TOU Project"
+  latitude: 0.0
+  longitude: 0.0
+  elevation: 0
+  unit_system: metric
+  currency: USD
+  country: "US"
+  time_zone: "America/Los_Angeles"
+  allowlist_external_dirs:
+    - "/config/www"
+  allowlist_external_urls:
+    - "https://example.com"
+
+# Include packages
+packages: !include packages/tou.yaml
+
+# Include other configuration files
+automation: !include automations.yaml
+script: !include scripts.yaml
+customize: !include customize.yaml
+
+# Additional settings can be added here as needed.

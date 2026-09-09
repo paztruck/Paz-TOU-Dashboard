@@ -1,0 +1,26 @@
+homeassistant:
+  name: Home Assistant
+  latitude: 0.0
+  longitude: 0.0
+  elevation: 0
+  unit_system: metric
+  currency: USD
+  country: US
+  timezone: America/Los_Angeles
+  allowlist_external_dirs:
+    - "/usr/var"
+  allowlist_external_urls:
+    - "http://example.com"
+  media_dirs:
+    recordings: "/media/recordings"
+    downloads: "/media/downloads"
+  customize: !include customize.yaml
+
+# Load packages
+packages: !include packages/electricity.yaml
+
+# Automation rules
+automation: !include automations.yaml
+
+# Scripts
+script: !include scripts.yaml

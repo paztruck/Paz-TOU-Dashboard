@@ -1,0 +1,33 @@
+
+# Loads default set of integrations. Do not remove.
+default_config:
+
+# Load frontend themes from the themes folder
+#frontend:
+#  themes: !include_dir_merge_named themes
+
+#automation: !include automations.yaml
+#script: !include scripts.yaml
+#scene: !include scenes.yaml
+
+homeassistant:
+  packages: !include_dir_named packages
+  customize:
+    sensor.solar_imported_power_kwh:
+      device_class: energy
+    sensor.solar_exported_power_kwh:
+      device_class: energy
+    sensor.solar_panel_production_kwh:
+      device_class: energy
+    sensor.solar_panel_to_house_kwh:
+      device_class: energy
+    sensor.solar_panel_to_battery_kwh:
+      device_class: energy
+    sensor.solar_grid_to_battery_kwh:
+      device_class: energy
+    sensor.solar_battery_out_kwh:
+      device_class: energy
+    sensor.solar_battery_in_kwh:
+      device_class: energy
+    sensor.solar_house_consumption_kwh:
+      device_class: energy

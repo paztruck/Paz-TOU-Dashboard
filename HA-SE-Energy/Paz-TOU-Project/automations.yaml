@@ -1,0 +1,27 @@
+- id: "1"
+  alias: "Time of Use Automation"
+  trigger:
+    - platform: time
+      at: "00:00:00"
+  condition:
+    - condition: state
+      entity_id: sensor.time_of_day
+      state: "peak"
+  action:
+    - service: notify.notify
+      data:
+        message: "It's peak time! Please reduce your energy consumption."
+        
+- id: "2"
+  alias: "Off-Peak Notification"
+  trigger:
+    - platform: time
+      at: "23:00:00"
+  condition:
+    - condition: state
+      entity_id: sensor.time_of_day
+      state: "off-peak"
+  action:
+    - service: notify.notify
+      data:
+        message: "It's off-peak time! You can use more energy."

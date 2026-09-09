@@ -1,0 +1,109 @@
+- id: '1788133364135'
+  alias: Aquarium CO2 Automation
+  description: ''
+  triggers:
+  - trigger: time
+    at: 08:00:00
+    weekday:
+    - sun
+    - mon
+    - tue
+    - wed
+    - thu
+    - fri
+    - sat
+  - trigger: time
+    at: 08:00:00
+    weekday:
+    - sun
+    - mon
+    - tue
+    - wed
+    - thu
+    - fri
+    - sat
+  conditions: []
+  actions:
+  - action: switch.turn_on
+    metadata: {}
+    target:
+      device_id: 959de85312944fc83825765184bc6942
+    data: {}
+  mode: single
+- id: '1788133589200'
+  alias: Aquarium CO2 Switch -Off
+  description: ''
+  triggers: []
+  conditions: []
+  actions: []
+  mode: single
+- id: '1788712457513'
+  alias: CO2 Switch ON in Morning
+  description: ''
+  triggers:
+  - trigger: time
+    at: 08:00:00
+    weekday:
+    - sun
+    - mon
+    - tue
+    - wed
+    - thu
+    - fri
+    - sat
+  conditions: []
+  actions:
+  - action: automation.toggle
+    metadata: {}
+    target:
+      entity_id: automation.aquarium_co2_automation
+    data: {}
+  mode: single
+- id: '1788712591769'
+  alias: CO2 Switch OFF in Evening
+  description: ''
+  triggers:
+  - trigger: time
+    at: '17:15:00'
+    weekday:
+    - sun
+    - mon
+    - tue
+    - wed
+    - thu
+    - fri
+    - sat
+  conditions: []
+  actions:
+  - action: switch.turn_off
+    metadata: {}
+    target:
+      device_id: 6e08f8a56226f4e889254185db277505
+    data: {}
+  mode: single
+- id: '1788716842086'
+  alias: Solar Power Down
+  description: ''
+  triggers:
+  - trigger: power.changed
+    target:
+      entity_id: sensor.paz_garage_paz_solaredge_i1_ac_power
+    options:
+      threshold:
+        type: below
+        value:
+          active_choice: number
+          number: 1
+          unit_of_measurement: mW
+  conditions:
+  - condition: sun.is_up
+    options: {}
+  actions:
+  - action: notify.send_message
+    metadata: {}
+    target:
+      device_id: 130023f6edacc527b419d41aee12a715
+    data:
+      message: Paz-SolarEdge Down
+      title: Paz-SolarEdge Energy Down
+  mode: single

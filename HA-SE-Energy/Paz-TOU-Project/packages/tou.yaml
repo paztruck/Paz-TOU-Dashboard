@@ -1,0 +1,34 @@
+sensor:
+  - platform: template
+    sensors:
+      tou_rate:
+        friendly_name: "Time of Use Rate"
+        value_template: >
+          {% set current_time = now().hour %}
+          {% if current_time >= 0 and current_time < 7 %}
+            0.10  # Off-peak rate
+          {% elif current_time >= 7 and current_time < 12 %}
+            0.15  # Mid-peak rate
+          {% elif current_time >= 12 and current_time < 18 %}
+            0.20  # On-peak rate
+          {% else %}
+            0.10  # Off-peak rate
+          {% endif %}
+          
+utility_meter:
+  daily_energy:
+    source: sensor.your_energy_sensor
+    cycle: daily
+  monthly_energy:
+    source: sensor.your_energy_sensor
+    cycle: monthly
+
+automation:
+  - alias: "Update TOU Rate"
+    trigger:
+      platform: time_pattern
+      minutes: '/15'
+    action:
+      service: homeassistant.update_entity
+      target:
+        entity_id: sensor.tou_rate
