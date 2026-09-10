@@ -60,6 +60,22 @@ views:
           - entity: sensor.solar_lifetime_production
             name: Lifetime production
 
+      - type: entities
+        title: Dedicated TOU meters today
+        entities:
+          - entity: sensor.tou_imported_energy_daily_on_peak
+            name: Imported on-peak
+          - entity: sensor.tou_imported_energy_daily_off_peak
+            name: Imported off-peak
+          - entity: sensor.tou_imported_energy_daily_super_off_peak
+            name: Imported super off-peak
+          - entity: sensor.tou_house_energy_daily_on_peak
+            name: House use on-peak
+          - entity: sensor.tou_house_energy_daily_off_peak
+            name: House use off-peak
+          - entity: sensor.tou_house_energy_daily_super_off_peak
+            name: House use super off-peak
+
       - type: markdown
         content: >-
           This page estimates today's import cost from the available peak and

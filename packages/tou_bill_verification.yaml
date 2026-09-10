@@ -44,6 +44,62 @@ input_number:
     mode: box
     initial: 0.08518
 
+utility_meter:
+  tou_imported_energy_daily:
+    source: sensor.solar_imported_power_kwh
+    cycle: daily
+    tariffs:
+      - on_peak
+      - off_peak
+      - super_off_peak
+  tou_house_energy_daily:
+    source: sensor.solar_house_consumption_kwh
+    cycle: daily
+    tariffs:
+      - on_peak
+      - off_peak
+      - super_off_peak
+
+automation:
+  - id: tou_set_daily_tariff
+    alias: TOU set daily tariff
+    trigger:
+      - platform: homeassistant
+        event: start
+      - platform: time
+        at: "00:00:00"
+      - platform: time
+        at: "06:00:00"
+      - platform: time
+        at: "10:00:00"
+      - platform: time
+        at: "14:00:00"
+      - platform: time
+        at: "16:00:00"
+      - platform: time
+        at: "21:00:00"
+    action:
+      - variables:
+          tariff: >-
+            {% set hour = now().hour %}
+            {% set weekend = now().isoweekday() in [6, 7] %}
+            {% if hour >= 16 and hour < 21 %}
+              on_peak
+            {% elif weekend and hour < 14 %}
+              super_off_peak
+            {% elif not weekend and (hour < 6 or (hour >= 10 and hour < 14)) %}
+              super_off_peak
+            {% else %}
+              off_peak
+            {% endif %}
+      - service: select.select_option
+        target:
+          entity_id:
+            - select.tou_imported_energy_daily
+            - select.tou_house_energy_daily
+        data:
+          option: "{{ tariff | trim }}"
+
 template:
   - sensor:
       - name: TOU period
