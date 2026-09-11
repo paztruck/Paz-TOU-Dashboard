@@ -10,7 +10,37 @@ input_datetime:
     has_time: false
     initial: "2026-07-27"
 
+input_boolean:
+  sdge_reduce_use_event_active:
+    name: SDG&E Reduce Your Use event active
+    icon: mdi:flash-alert
+
 input_number:
+  sdge_reduce_use_event_kwh:
+    name: SDG&E Reduce Your Use kWh on bill
+    min: 0
+    max: 10000
+    step: 0.01
+    unit_of_measurement: "kWh"
+    mode: box
+    initial: 0
+  sdge_reduce_use_billed_rate:
+    name: SDG&E Reduce Your Use billed rate
+    min: 0
+    max: 5
+    step: 0.00001
+    unit_of_measurement: "$/kWh"
+    mode: box
+    initial: 1.16000
+  sdge_reduce_use_actual_charge:
+    name: SDG&E Reduce Your Use actual charge
+    min: 0
+    max: 10000
+    step: 0.01
+    unit_of_measurement: "$"
+    mode: box
+    initial: 0
+
   sdge_delivery_rate:
     name: SDG&E delivery rate
     min: 0
@@ -156,10 +186,38 @@ template:
         unique_id: tou_import_cost_today
         unit_of_measurement: "$"
         state: >
-          {% set peak = states('sensor.solar_imported_power_daily_peak') | float(0) %}
-          {% set off_peak = states('sensor.solar_imported_power_daily_offpeak') | float(0) %}
-          {% set peak_rate = states('input_number.sdge_delivery_rate') | float(0) + states('input_number.sdge_generation_on_peak') | float(0) %}
-          {% set off_peak_rate = states('input_number.sdge_delivery_rate') | float(0) + states('input_number.sdge_generation_off_peak') | float(0) %}
-          {{ (peak * peak_rate + off_peak * off_peak_rate) | round(2) }}
+          {% set on_peak = states('sensor.tou_imported_energy_daily_on_peak') | float(0) %}
+          {% set off_peak = states('sensor.tou_imported_energy_daily_off_peak') | float(0) %}
+          {% set super_off_peak = states('sensor.tou_imported_energy_daily_super_off_peak') | float(0) %}
+          {% set delivery = states('input_number.sdge_delivery_rate') | float(0) %}
+          {% set on_peak_rate = delivery + states('input_number.sdge_generation_on_peak') | float(0) %}
+          {% set off_peak_rate = delivery + states('input_number.sdge_generation_off_peak') | float(0) %}
+          {% set super_off_peak_rate = delivery + states('input_number.sdge_generation_super_off_peak') | float(0) %}
+          {{ (on_peak * on_peak_rate + off_peak * off_peak_rate + super_off_peak * super_off_peak_rate) | round(2) }}
         attributes:
-          note: "Daily estimate uses the available peak/off-peak utility meters. Super off-peak history requires a dedicated utility meter."
+          note: "Daily estimate uses the dedicated on-peak, off-peak, and super off-peak utility meters."
+
+      - name: TOU imported energy today
+        unique_id: tou_imported_energy_today
+        unit_of_measurement: "kWh"
+        device_class: energy
+        state: >
+          {{ (states('sensor.tou_imported_energy_daily_on_peak') | float(0)
+            + states('sensor.tou_imported_energy_daily_off_peak') | float(0)
+            + states('sensor.tou_imported_energy_daily_super_off_peak') | float(0)) | round(3) }}
+
+      - name: SDG&E Reduce Your Use calculated charge
+        unique_id: sdge_reduce_use_calculated_charge
+        default_entity_id: sensor.sdg_e_reduce_your_use_calculated_charge
+        unit_of_measurement: "$"
+        state: >
+          {{ (states('input_number.sdge_reduce_use_event_kwh') | float(0)
+            * states('input_number.sdge_reduce_use_billed_rate') | float(0)) | round(2) }}
+
+      - name: SDG&E Reduce Your Use charge variance
+        unique_id: sdge_reduce_use_charge_variance
+        default_entity_id: sensor.sdg_e_reduce_your_use_charge_variance
+        unit_of_measurement: "$"
+        state: >
+          {{ (states('sensor.sdg_e_reduce_your_use_calculated_charge') | float(0)
+            - states('input_number.sdge_reduce_use_actual_charge') | float(0)) | round(2) }}

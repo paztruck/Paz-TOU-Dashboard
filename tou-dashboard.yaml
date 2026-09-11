@@ -27,26 +27,26 @@ views:
             name: Total import rate
 
       - type: grid
-        title: Imported energy today
+        title: Imported energy today by TOU period
         columns: 2
         square: false
         cards:
           - type: entity
-            entity: sensor.solar_imported_power_daily_peak
-            name: Peak import
+            entity: sensor.tou_imported_energy_daily_on_peak
+            name: On-peak import
             icon: mdi:transmission-tower-import
           - type: entity
-            entity: sensor.solar_imported_power_daily_offpeak
+            entity: sensor.tou_imported_energy_daily_off_peak
             name: Off-peak import
             icon: mdi:transmission-tower-import
           - type: entity
-            entity: sensor.solar_house_consumption_daily_peak
-            name: Peak consumption
-            icon: mdi:home-lightning-bolt-outline
+            entity: sensor.tou_imported_energy_daily_super_off_peak
+            name: Super off-peak import
+            icon: mdi:transmission-tower-import
           - type: entity
-            entity: sensor.solar_house_consumption_daily_offpeak
-            name: Off-peak consumption
-            icon: mdi:home-lightning-bolt-outline
+            entity: sensor.tou_imported_energy_today
+            name: Total imported energy
+            icon: mdi:transmission-tower-import
 
       - type: entities
         title: Daily estimate
@@ -75,6 +75,22 @@ views:
             name: House use off-peak
           - entity: sensor.tou_house_energy_daily_super_off_peak
             name: House use super off-peak
+
+      - type: entities
+        title: Reduce Your Use bill line
+        entities:
+          - entity: input_boolean.sdge_reduce_use_event_active
+            name: Event active annotation
+          - entity: input_number.sdge_reduce_use_event_kwh
+            name: Event kWh on bill
+          - entity: input_number.sdge_reduce_use_billed_rate
+            name: Billed event rate
+          - entity: sensor.sdg_e_reduce_your_use_calculated_charge
+            name: Calculated event charge
+          - entity: input_number.sdge_reduce_use_actual_charge
+            name: Actual bill charge
+          - entity: sensor.sdg_e_reduce_your_use_charge_variance
+            name: Charge variance
 
       - type: markdown
         content: >-
