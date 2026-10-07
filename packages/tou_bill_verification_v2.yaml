@@ -3,12 +3,10 @@ input_datetime:
     name: TOU billing start
     has_date: true
     has_time: false
-    initial: "2026-08-27"
   tou_billing_end:
     name: TOU billing end
     has_date: true
     has_time: false
-    initial: "2026-09-25"
 
 binary_sensor:
   - platform: workday
@@ -38,7 +36,7 @@ input_number:
     step: 0.01
     unit_of_measurement: "kWh"
     mode: box
-    initial: 0
+#    initial: 0
   sdge_reduce_use_billed_rate:
     name: SDG&E Reduce Your Use billed rate
     min: 0
@@ -54,7 +52,7 @@ input_number:
     step: 0.01
     unit_of_measurement: "$"
     mode: box
-    initial: 0
+#    initial: 0
 
   sdge_delivery_rate:
     name: SDG&E delivery rate
@@ -264,6 +262,14 @@ utility_meter:
     tariffs:
       - normal
       - event
+  # Same idea, but resets every day so you can see just today's event window.
+  # Read it from sensor.tou_imported_energy_reduce_use_daily_event
+  tou_imported_energy_reduce_use_daily:
+    source: sensor.my_solaredge_i1_m2_ac_energy_imported
+    cycle: daily
+    tariffs:
+      - normal
+      - event
 
   # Billing-aligned "monthly" TOU meters (reset together with the billing-cycle meters by the
   # billing-start automation and the manual reset button; the calendar cycle is only a fallback)
@@ -414,21 +420,29 @@ automation:
     action:
       - service: select.select_option
         target:
-          entity_id: select.tou_imported_energy_reduce_use_event
+          entity_id:
+            - select.tou_imported_energy_reduce_use_event
+            - select.tou_imported_energy_reduce_use_daily
         data:
           option: >-
             {% if is_state('input_boolean.sdge_reduce_use_event_active', 'on') and 16 <= now().hour < 21 %}event{% else %}normal{% endif %}
 
   # Safety net: the event flag clears itself at 9pm so it can't stay on for the next day.
+  # The startup trigger covers a restart that happened across 9pm; the hour check keeps a
+  # mid-event restart (4-9pm) from clearing the flag.
   - id: tou_reduce_use_event_auto_off
     alias: TOU Reduce Your Use event auto-off
     trigger:
       - platform: time
         at: "21:00:05"
+      - platform: homeassistant
+        event: start
     condition:
       - condition: state
         entity_id: input_boolean.sdge_reduce_use_event_active
         state: "on"
+      - condition: template
+        value_template: "{{ now().hour >= 21 or now().hour < 16 }}"
     action:
       - service: input_boolean.turn_off
         target:
@@ -1015,6 +1029,15 @@ template:
         attributes:
           note: "Surcharge only; the normal on-peak energy cost for the same kWh is billed separately."
 
+      - name: SDG&E Reduce Your Use tracked charge today
+        unique_id: sdge_reduce_use_tracked_charge_today
+        default_entity_id: sensor.sdg_e_reduce_your_use_tracked_charge_today
+        unit_of_measurement: "$"
+        state: >
+          {{ (states('sensor.tou_imported_energy_reduce_use_daily_event') | float(0)
+            * states('input_number.sdge_reduce_use_billed_rate') | float(0)) | round(2) }}
+        attributes:
+          note: "Surcharge only for today's event window; the normal on-peak energy cost for the same kWh is billed separately."
       - name: SDG&E Reduce Your Use calculated charge
         unique_id: sdge_reduce_use_calculated_charge
         default_entity_id: sensor.sdg_e_reduce_your_use_calculated_charge
