@@ -4,7 +4,7 @@ views:
     path: Garage-quick-view
     cards:
       - type: custom:button-card
-        entity: sensor.paz_garage_man_cave_garage_temperature
+        entity: sensor.paz_garage_devices_garage_temp_sensor_garage_temp
         name: Garage Temperature
         icon: mdi:thermometer
         show_state: true
@@ -12,6 +12,7 @@ views:
         styles:
           card:
             - width: 125%
+            - min-width: 160px
             - min-height: 82px
             - margin: 0 auto
             - border-radius: 12px
@@ -37,6 +38,7 @@ views:
         styles:
           card:
             - width: 125%
+            - min-width: 160px
             - min-height: 82px
             - margin: 0 auto
             - border-radius: 12px
@@ -104,13 +106,14 @@ views:
     cards:
       - type: custom:button-card
         entity: sensor.man_cave_tv_room_man_cave_tv_room_temperature
-        name: Entertainment Room Temperature
+        name: Entertainment Temperature
         icon: mdi:thermometer
         show_state: true
         show_icon: true
         styles:
           card:
             - width: 125%
+            - min-width: 160px
             - min-height: 82px
             - margin: 0 auto
             - border-radius: 12px
@@ -129,13 +132,14 @@ views:
 
       - type: custom:button-card
         entity: sensor.man_cave_tv_room_man_cave_tv_room_humidity
-        name: Entertainment Room Humidity
+        name: Entertainment Humidity
         icon: mdi:water-percent
         show_state: true
         show_icon: true
         styles:
           card:
             - width: 125%
+            - min-width: 170px
             - min-height: 82px
             - margin: 0 auto
             - border-radius: 12px
@@ -546,7 +550,8 @@ views:
         show_icon: true
         styles:
           card:
-            - width: 100%
+            - width: 125%
+            - min-width: 160px
             - min-height: 82px
             - margin: 0 auto
             - border-radius: 12px
@@ -571,7 +576,8 @@ views:
         show_icon: true
         styles:
           card:
-            - width: 100%
+            - width: 125%
+            - min-width: 190px
             - min-height: 82px
             - margin: 0 auto
             - border-radius: 12px
@@ -596,7 +602,8 @@ views:
         show_icon: true
         styles:
           card:
-            - width: 100%
+            - width: 125%
+            - min-width: 160px
             - min-height: 82px
             - margin: 0 auto
             - border-radius: 12px
@@ -621,7 +628,8 @@ views:
         show_icon: true
         styles:
           card:
-            - width: 100%
+            - width: 125%
+            - min-width: 180px
             - min-height: 82px
             - margin: 0 auto
             - border-radius: 12px
@@ -646,7 +654,8 @@ views:
         show_icon: true
         styles:
           card:
-            - width: 100%
+            - width: 125%
+            - min-width: 160px
             - min-height: 82px
             - margin: 0 auto
             - border-radius: 12px
@@ -671,7 +680,8 @@ views:
         show_icon: true
         styles:
           card:
-            - width: 100%
+            - width: 125%
+            - min-width: 180px
             - min-height: 82px
             - margin: 0 auto
             - border-radius: 12px
