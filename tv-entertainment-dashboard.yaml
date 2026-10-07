@@ -452,6 +452,20 @@ views:
 
 
 
+      - type: gauge
+        entity: sensor.cooktop_power_total
+        name: Cooktop power
+        min: 0
+        max: 7500
+        needle: true
+        segments:
+          - from: 0
+            color: "#43a047"
+          - from: 5000
+            color: "#ffa600"
+          - from: 6000
+            color: "#db4437"
+
       - type: entities
         title: Power Used
         entities:
