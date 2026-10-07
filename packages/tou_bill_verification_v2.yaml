@@ -19,6 +19,8 @@ binary_sensor:
     excludes: [sat, sun, holiday]
 
 input_boolean:
+  # Turn ON when SDG&E announces a Reduce Your Use event for today.
+  # Only the 4-9pm window is tracked; it switches itself back off at 9pm.
   sdge_reduce_use_event_active:
     name: SDG&E Reduce Your Use event active
     icon: mdi:flash-alert
@@ -253,7 +255,18 @@ utility_meter:
       - off_peak
       - super_off_peak
 
-  # Standard Calendar Monthly TOU meters (Run untouched 1st to end of month)
+  # Reduce Your Use event meter (billing-cycle aligned; reset with the billing-cycle meters).
+  # Accumulates grid import only while an event is active AND it is 4-9pm.
+  # Read it from sensor.tou_imported_energy_reduce_use_event_event
+  tou_imported_energy_reduce_use_event:
+    source: sensor.my_solaredge_i1_m2_ac_energy_imported
+    cycle: yearly
+    tariffs:
+      - normal
+      - event
+
+  # Billing-aligned "monthly" TOU meters (reset together with the billing-cycle meters by the
+  # billing-start automation and the manual reset button; the calendar cycle is only a fallback)
   tou_imported_energy_monthly:
     source: sensor.my_solaredge_i1_m2_ac_energy_imported
     cycle: monthly
@@ -377,6 +390,7 @@ automation:
             - select.tou_solar_production_monthly
             - select.tou_exported_energy_monthly
             - select.tou_solar_to_house_monthly
+            - select.tou_cooktop_energy_monthly
             - select.tou_imported_energy_trueup
             - select.tou_house_energy_trueup
             - select.tou_solar_production_trueup
@@ -384,6 +398,41 @@ automation:
             - select.tou_solar_to_house_trueup
         data:
           option: "{{ tariff | trim }}"
+
+  # Reduce Your Use event tracking: "event" only while the boolean is on AND 4pm-9pm.
+  - id: tou_reduce_use_event_tariff
+    alias: TOU Reduce Your Use event tariff
+    trigger:
+      - platform: homeassistant
+        event: start
+      - platform: state
+        entity_id: input_boolean.sdge_reduce_use_event_active
+      - platform: time
+        at: "16:00:00"
+      - platform: time
+        at: "21:00:00"
+    action:
+      - service: select.select_option
+        target:
+          entity_id: select.tou_imported_energy_reduce_use_event
+        data:
+          option: >-
+            {% if is_state('input_boolean.sdge_reduce_use_event_active', 'on') and 16 <= now().hour < 21 %}event{% else %}normal{% endif %}
+
+  # Safety net: the event flag clears itself at 9pm so it can't stay on for the next day.
+  - id: tou_reduce_use_event_auto_off
+    alias: TOU Reduce Your Use event auto-off
+    trigger:
+      - platform: time
+        at: "21:00:05"
+    condition:
+      - condition: state
+        entity_id: input_boolean.sdge_reduce_use_event_active
+        state: "on"
+    action:
+      - service: input_boolean.turn_off
+        target:
+          entity_id: input_boolean.sdge_reduce_use_event_active
 
   - id: tou_reset_monthly_meters_on_billing_start
     alias: TOU reset monthly meters on billing start
@@ -406,6 +455,8 @@ automation:
             - select.tou_solar_production_billing_cycle
             - select.tou_exported_energy_billing_cycle
             - select.tou_solar_to_house_billing_cycle
+            - select.tou_imported_energy_reduce_use_event
+            - select.tou_imported_energy_monthly
             - select.tou_house_energy_monthly
             - select.tou_solar_production_monthly
             - select.tou_exported_energy_monthly
@@ -416,8 +467,8 @@ automation:
     alias: TOU manual billing cycle reset
     description: >-
       Press the "Apply new billing cycle" button any time (e.g. after updating
-      tou_billing_start/tou_billing_end mid-cycle) to reset the billing-cycle
-      and monthly TOU meters immediately, without waiting for the exact-date
+      tou_billing_start/tou_billing_end mid-cycle) to reset the billing-cycle,
+      event and monthly TOU meters immediately, without waiting for the exact-date
       match in tou_reset_monthly_meters_on_billing_start.
     trigger:
       - platform: state
@@ -431,6 +482,8 @@ automation:
             - select.tou_solar_production_billing_cycle
             - select.tou_exported_energy_billing_cycle
             - select.tou_solar_to_house_billing_cycle
+            - select.tou_imported_energy_reduce_use_event
+            - select.tou_imported_energy_monthly
             - select.tou_house_energy_monthly
             - select.tou_solar_production_monthly
             - select.tou_exported_energy_monthly
@@ -940,6 +993,27 @@ template:
         state: >
           {{ (states('sensor.tou_import_cost_trueup') | float(0)
             - states('sensor.tou_total_solar_savings_trueup') | float(0)) | round(2) }}
+
+      # Reduce Your Use: live tracking of event-window grid import (4-9pm on event days only)
+      - name: SDG&E Reduce Your Use tracked kWh
+        unique_id: sdge_reduce_use_tracked_kwh
+        default_entity_id: sensor.sdg_e_reduce_your_use_tracked_kwh
+        unit_of_measurement: "kWh"
+        device_class: energy
+        state: >
+          {{ states('sensor.tou_imported_energy_reduce_use_event_event') | float(0) | round(3) }}
+        attributes:
+          note: "Gross grid import during event windows. SDG&E nets 15-minute intervals against export, so the bill can differ slightly."
+
+      - name: SDG&E Reduce Your Use tracked charge
+        unique_id: sdge_reduce_use_tracked_charge
+        default_entity_id: sensor.sdg_e_reduce_your_use_tracked_charge
+        unit_of_measurement: "$"
+        state: >
+          {{ (states('sensor.sdg_e_reduce_your_use_tracked_kwh') | float(0)
+            * states('input_number.sdge_reduce_use_billed_rate') | float(0)) | round(2) }}
+        attributes:
+          note: "Surcharge only; the normal on-peak energy cost for the same kWh is billed separately."
 
       - name: SDG&E Reduce Your Use calculated charge
         unique_id: sdge_reduce_use_calculated_charge
