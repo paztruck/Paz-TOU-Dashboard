@@ -1,0 +1,6 @@
+secrets.yaml
+**/secrets.yaml
+*~
+*.un~
+.gitmore
+*.csv

@@ -1,0 +1,61 @@
+# Kitchen cooktop monitoring (Shelly CT, 30A circuit)
+
+template:
+  - sensor:
+      - name: "Cooktop Power Total"
+        unique_id: cooktop_power_total
+        unit_of_measurement: "W"
+        device_class: power
+        state_class: measurement
+        state: >-
+          {% set a = states('sensor.kitchen_stove_phase_a_kitchen_stove_phase_a_power') | float(0) %}
+          {% set b = states('sensor.kitchen_stove_phase_b_kitchen_stove_phase_b_power') | float(0) %}
+          {{ ((a | abs) + (b | abs)) | round(0) }}
+        availability: >-
+          {{ states('sensor.kitchen_stove_phase_a_kitchen_stove_phase_a_power') | is_number
+            and states('sensor.kitchen_stove_phase_b_kitchen_stove_phase_b_power') | is_number }}
+
+sensor:
+  - platform: integration
+    source: sensor.cooktop_power_total
+    name: cooktop_energy_kwh
+    unique_id: cooktop_energy_kwh
+    unit_prefix: k
+    method: left
+
+utility_meter:
+  tou_cooktop_energy_monthly:
+    source: sensor.cooktop_energy_kwh
+    cycle: yearly
+    tariffs:
+      - on_peak
+      - off_peak
+      - super_off_peak
+
+automation:
+  - id: cooktop_high_power_alert
+    alias: Cooktop high power alert
+    mode: single
+    triggers:
+      - trigger: numeric_state
+        entity_id: sensor.cooktop_power_total
+        above: 6000
+        for: "00:03:00"
+    actions:
+      - action: notify.send_message
+        metadata: {}
+        target:
+          device_id: !secret phone_device_id
+        data:
+          title: "Cooktop near its 30A limit"
+          message: >-
+            Cooktop has been above 6 kW for 3 minutes
+            ({{ states('sensor.cooktop_power_total') | float(0) | round(0) }} W).
+            The 30A breaker trips at about 7.2 kW.
+      - action: persistent_notification.create
+        data:
+          title: "Cooktop near its 30A limit"
+          message: >-
+            Cooktop above 6 kW for 3 minutes
+            ({{ states('sensor.cooktop_power_total') | float(0) | round(0) }} W).
+          notification_id: cooktop_high_power
