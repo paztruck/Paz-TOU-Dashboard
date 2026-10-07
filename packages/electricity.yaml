@@ -1,50 +1,80 @@
 # filepath: HA-SE-Energy/packages/electricity.yaml
+input_number:
+  # Frozen lifetime total of the original grid-tied inverter, retired and replaced by the current Home Hub (per SE Monitor, 2026-09-16).
+  solar_lifetime_production_offset_kwh:
+    name: Solar Lifetime Production Offset
+    min: 0
+    max: 1000000
+    step: 0.001
+    unit_of_measurement: kWh
+    mode: box
+    icon: mdi:counter
+    initial: 22060
+
 template:
   - sensor:
+      - name: "Stove Phase A Power Positive"
+        unique_id: stove_phase_a_power_positive
+        default_entity_id: sensor.stove_phase_a_power_positive
+        unit_of_measurement: "W"
+        state: >
+          {{ (states('sensor.kitchen_stove_phase_a_power') | float(0)) * -1 }}
+
+      - name: "Stove Phase B Power Positive"
+        unique_id: stove_phase_b_power_positive
+        default_entity_id: sensor.stove_phase_b_power_positive
+        unit_of_measurement: "W"
+        state: >
+          {{ (states('sensor.kitchen_stove_phase_b_power') | float(0)) * -1 }}
+
+      - name: "Stove Total Power Positive"
+        unique_id: stove_total_power_positive
+        default_entity_id: sensor.stove_total_power_positive
+        unit_of_measurement: "W"
+        state: >
+          {{ states('sensor.stove_phase_a_power_positive') | float(0)
+            + states('sensor.stove_phase_b_power_positive') | float(0) }}
+
       - name: "Solar Panel Production W"
         unique_id: solar_panel_production_w
         unit_of_measurement: "W"
+        device_class: power
+        state_class: measurement
         icon: mdi:solar-power
         state: >
-          {% set i1_dc_power = states('sensor.paz_garage_paz_solaredge_i1_dc_power') | float(0) %}
+          {% set i1_dc_power = states('sensor.paz_garage_devices_my_solaredge_i1_dc_power') | float(0) %}
           {% if (i1_dc_power <= 0) %}
             0
           {% else %}
             {{ i1_dc_power }}
           {% endif %}
         availability: >
-          {{ states('sensor.paz_garage_paz_solaredge_i1_dc_power') | is_number }}
+          {{ states('sensor.paz_garage_devices_my_solaredge_i1_dc_power') | is_number }}
 
       - name: "Solar Panel To House W"
         unique_id: solar_panel_to_house_w
         unit_of_measurement: "W"
+        device_class: power
+        state_class: measurement
         icon: mdi:solar-power
         state: >
-          {% set i1_dc_power = states('sensor.paz_garage_paz_solaredge_i1_dc_power') | float(0) %}
-          {% set i1_ac_power = states('sensor.paz_garage_paz_solaredge_i1_ac_power') | float(0) %}
-          {% set grid_ac_power = states('sensor.paz_garage_paz_solaredge_i1_m2_ac_power') | float(0) %}
-
-          {% if (grid_ac_power > 0) %}
-            {% if (i1_dc_power < 0 and i1_ac_power <= 0) %}
-              {{ (i1_dc_power - grid_ac_power) }}
-            {% else %}
-              {{ (i1_ac_power - grid_ac_power) }}
-            {% endif %}
-          {% elif (grid_ac_power <= 0) %}
-            {% if (i1_dc_power < 0 and i1_ac_power <= 0) %}
-              0
-            {% else %}
-              {{ (i1_ac_power) }}
-            {% endif %}
+          {% set i1_ac_power = states('sensor.paz_garage_devices_my_solaredge_i1_ac_power') | float(0) %}
+          {% set grid_ac_power = states('sensor.my_solaredge_i1_m2_ac_power') | float(0) %}
+          {% if (i1_ac_power > 0 and grid_ac_power > 0) %}
+            {{ [i1_ac_power - grid_ac_power, 0] | max }}
+          {% elif (i1_ac_power > 0) %}
+            {{ i1_ac_power }}
           {% else %}
             0
           {% endif %}
         availability: >
-          {{ states('sensor.paz_garage_paz_solaredge_i1_dc_power') | is_number and states('sensor.paz_garage_paz_solaredge_i1_ac_power') | is_number and states('sensor.paz_garage_paz_solaredge_i1_m2_ac_power') | is_number }}
+          {{ states('sensor.paz_garage_devices_my_solaredge_i1_dc_power') | is_number and states('sensor.paz_garage_devices_my_solaredge_i1_ac_power') | is_number and states('sensor.my_solaredge_i1_m2_ac_power') | is_number }}
 
       - name: "Solar Panel To Battery W"
         unique_id: solar_panel_to_battery_w
         unit_of_measurement: "W"
+        device_class: power
+        state_class: measurement
         icon: mdi:solar-power
         state: >
           0
@@ -54,6 +84,8 @@ template:
       - name: "Solar Panel To Grid W"
         unique_id: solar_panel_to_grid_w
         unit_of_measurement: "W"
+        device_class: power
+        state_class: measurement
         icon: mdi:solar-power
         state: >
           {% set panel_production_w = states('sensor.solar_panel_production_w') | float(0) %}
@@ -72,6 +104,8 @@ template:
       - name: "Solar Battery To House W"
         unique_id: solar_battery_to_house_w
         unit_of_measurement: "W"
+        device_class: power
+        state_class: measurement
         icon: mdi:battery-negative
         state: >
           0
@@ -81,9 +115,11 @@ template:
       - name: "Solar Grid To House W"
         unique_id: solar_grid_to_house_w
         unit_of_measurement: "W"
+        device_class: power
+        state_class: measurement
         icon: mdi:transmission-tower-export
         state: >
-          {% set grid_ac_power = states('sensor.paz_garage_paz_solaredge_i1_m2_ac_power') | float(0) %}
+          {% set grid_ac_power = states('sensor.my_solaredge_i1_m2_ac_power') | float(0) %}
           {% set grid_to_battery_w = states('sensor.solar_grid_to_battery_w') | float(0) %}
 
           {% if (grid_ac_power <= 0) %}
@@ -92,11 +128,13 @@ template:
             0
           {% endif %}
         availability: >
-          {{ states('sensor.paz_garage_paz_solaredge_i1_m2_ac_power') | is_number }}
+          {{ states('sensor.my_solaredge_i1_m2_ac_power') | is_number }}
           
       - name: "Solar Grid To Battery W"
         unique_id: solar_grid_to_battery_w
         unit_of_measurement: "W"
+        device_class: power
+        state_class: measurement
         icon: mdi:battery-positive
         state: >
           0
@@ -106,6 +144,8 @@ template:
       - name: "Solar Battery In W"
         unique_id: solar_battery_in_w
         unit_of_measurement: "W"
+        device_class: power
+        state_class: measurement
         icon: mdi:battery-positive
         state: >
           {% set grid_to_battery_w = states('sensor.solar_grid_to_battery_w') | float(0) %}
@@ -116,6 +156,8 @@ template:
       - name: "Solar House Consumption W"
         unique_id: solar_house_consumption_w
         unit_of_measurement: "W"
+        device_class: power
+        state_class: measurement
         icon: mdi:home
         state: >
           {% set panel_to_house_w = states('sensor.solar_panel_to_house_w') | float(0) %}
@@ -127,9 +169,12 @@ template:
       - name: "Solar Imported Power W"
         unique_id: solar_imported_power_w
         unit_of_measurement: "W"
+        device_class: power
+        state_class: measurement
         icon: mdi:transmission-tower-export
         state: >
-          {% set grid_ac_power = states('sensor.paz_garage_paz_solaredge_i1_m2_ac_power') | float(0) %}
+          {% set grid_ac_power = states('sensor.my_solaredge_i1_m2_ac_power') | float(0) %}
+          #{% set grid_ac_power = states('sensor.paz_garage_paz_solaredge_i1_m1_ac_power') | float(0) %}
 
           {% if (grid_ac_power < 0) %}
             {{ (grid_ac_power * -1) }}
@@ -137,14 +182,16 @@ template:
             0
           {% endif %}
         availability: >
-          {{ states('sensor.paz_garage_paz_solaredge_i1_m2_ac_power') | is_number}}
+          {{ states('sensor.my_solaredge_i1_m2_ac_power') | is_number}}
 
       - name: "Solar Exported Power W"
         unique_id: solar_exported_power_w
         unit_of_measurement: "W"
+        device_class: power
+        state_class: measurement
         icon: mdi:transmission-tower-import
         state: >
-          {% set grid_ac_power = states('sensor.paz_garage_paz_solaredge_i1_m2_ac_power') | float(0) %}
+          {% set grid_ac_power = states('sensor.my_solaredge_i1_m2_ac_power') | float(0) %}
 
           {% if (grid_ac_power > 0) %}
             {{ (grid_ac_power) }}
@@ -152,20 +199,48 @@ template:
             0
           {% endif %}
         availability: >
-          {{ states('sensor.paz_garage_paz_solaredge_i1_ac_power') | is_number }}
+          {{ states('sensor.my_solaredge_i1_m2_ac_power') | is_number }}
           
-      - name: "Solar Lifetime Production"
-        unique_id: solar_lifetime_production
+      - name: "Solar Original Inverter Lifetime Production"
+        unique_id: solar_original_inverter_lifetime_production
         unit_of_measurement: "MWh"
         icon: mdi:solar-power
         state: >
-          {% set ac_energy_kwh = states('sensor.paz_garage_paz_solaredge_i1_ac_energy_kwh') | float(0) %}
+          {{ ((states('input_number.solar_lifetime_production_offset_kwh') | float(0)) / 1000) | round(3) }}
+        attributes:
+          note: "Frozen total from the original grid-tied inverter, retired in place per SolarEdge's recommendation to preserve history."
 
-          {{ ((ac_energy_kwh / 1000) | round (2)) }}
+      - name: "Solar Current Inverter Lifetime Production"
+        unique_id: solar_current_inverter_lifetime_production
+        unit_of_measurement: "MWh"
+        icon: mdi:solar-power
+        state: >
+          {{ ((states('sensor.paz_garage_devices_my_solaredge_i1_ac_energy') | float(0)) / 1000) | round(3) }}
         availability: >
-          {{ states('sensor.paz_garage_paz_solaredge_i1_ac_energy_kwh') | is_number }}
+          {{ states('sensor.paz_garage_devices_my_solaredge_i1_ac_energy') | is_number }}
+
+      - name: "Solar Lifetime Production"
+        unique_id: solar_lifetime_production
+        unit_of_measurement: "MWh"
+        device_class: energy
+        state_class: total_increasing
+        icon: mdi:solar-power
+        state: >
+          {% set ac_energy_kwh = states('sensor.paz_garage_devices_my_solaredge_i1_ac_energy') | float(0) %}
+          {% set offset_kwh = states('input_number.solar_lifetime_production_offset_kwh') | float(0) %}
+
+          {{ (((ac_energy_kwh + offset_kwh) / 1000) | round (3)) }}
+        availability: >
+          {{ states('sensor.paz_garage_devices_my_solaredge_i1_ac_energy') | is_number }}
 
 sensor:
+  - platform: integration
+    source: sensor.stove_total_power_positive
+    method: left
+    unit_prefix: k
+    unique_id: stove_total_energy_kwh
+    name: stove_total_energy_kwh
+
   # Panels
   - platform: integration
     source: sensor.solar_panel_production_w

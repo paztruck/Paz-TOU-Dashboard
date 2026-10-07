@@ -12,7 +12,7 @@ utility_meter:
 
 # Electricity Grid
   solar_imported_power_daily_solaredge:
-    source: sensor.paz_garage_paz_solaredge_i1_m2_ac_energy_imported
+    source: sensor.my_solaredge_i1_m2_ac_energy_imported
     name: Solar Imported Power Daily Solar Edge
     cycle: daily
     tariffs:
@@ -79,7 +79,7 @@ utility_meter:
 
 # Electricity Grid
   solar_imported_power_weekly_solaredge:
-    source: sensor.paz_garage_paz_solaredge_i1_m2_ac_energy_imported
+    source: sensor.my_solaredge_i1_m2_ac_energy_imported
     name: Solar Imported Power Weekly Solar Edge
     cycle: weekly
     tariffs:
@@ -145,7 +145,7 @@ utility_meter:
 
 # Electricity Grid
   solar_imported_power_monthly_solaredge:
-    source: sensor.paz_garage_paz_solaredge_i1_m2_ac_energy_imported
+    source: sensor.my_solaredge_i1_m2_ac_energy_imported
     name: Solar Imported Power Monthly Solar Edge
     cycle: monthly
     tariffs:
@@ -215,7 +215,7 @@ utility_meter:
 
 # Electricity Grid
   solar_imported_power_yearly_solaredge:
-    source: sensor.paz_garage_paz_solaredge_i1_m2_ac_energy_imported
+    source: sensor.my_solaredge_i1_m2_ac_energy_imported
     name: Solar Imported Power Yearly Solar Edge
     cycle: yearly
     tariffs:
