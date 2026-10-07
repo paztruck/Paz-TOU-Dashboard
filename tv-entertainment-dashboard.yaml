@@ -1,0 +1,724 @@
+title: Household Quick View
+views:
+  - title: "🚘 Garage Quick View"
+    path: Garage-quick-view
+    cards:
+      - type: custom:button-card
+        entity: sensor.paz_garage_devices_garage_temp_sensor_garage_temp
+        name: Garage Temperature
+        icon: mdi:thermometer
+        show_state: true
+        show_icon: true
+        styles:
+          card:
+            - width: 125%
+            - min-width: 160px
+            - min-height: 82px
+            - margin: 0 auto
+            - border-radius: 12px
+            - padding: 6%
+            - background: rgba(255,255,255,0.04)
+          name:
+            - font-size: 14px
+          state:
+            - color: red
+            - font-size: 14px
+            - font-weight: bold
+          icon:
+            - color: red
+            - width: 20px
+            - height: 20px
+
+      - type: custom:button-card
+        entity: sensor.paz_garage_man_cave_garage_humidity
+        name: Garage Humidity
+        icon: mdi:water-percent
+        show_state: true
+        show_icon: true
+        styles:
+          card:
+            - width: 125%
+            - min-width: 160px
+            - min-height: 82px
+            - margin: 0 auto
+            - border-radius: 12px
+            - padding: 6%
+            - background: rgba(255,255,255,0.04)
+          name:
+            - font-size: 14px
+          state:
+            - color: blue
+            - font-size: 14px
+            - font-weight: bold
+          icon:
+            - color: blue
+            - width: 20px
+            - height: 20px
+
+      - type: entities
+        title: Current Power Used
+        entities:
+          - entity: sensor.paz_workbench_power
+            name: WorkBench Power Used
+            icon: mdi:bench-back
+          - entity: sensor.paz_garage_freezer_power
+            name:  Garage Freezer Power Used
+            icon: mdi:fridge
+          - entity: sensor.third_reality_inc_3rsp02064z_power_3
+            name: Communications Stack Power Used
+            icon: mdi:router-network
+          - entity: sensor.paz_garage_devices_washing_machine_power
+            name: Washing Machine Power Used
+            icon: mdi:washing-machine
+
+      - type: history-graph
+        title: Room power history
+        hours_to_show: 24
+        entities:
+          - entity: sensor.paz_workbench_power
+            name: Paz-WorkBench Power Used
+          - entity: sensor.paz_garage_freezer_power
+            name: Garage Freezer Power Used
+          - entity: sensor.third_reality_inc_3rsp02064z_power_3
+            name: Communications Stack Power Used
+          - entity: sensor.paz_garage_devices_washing_machine_power
+            name: Washing Machine Power Used
+
+
+      - type: entities
+        title: Energy delivered
+        entities:
+          - entity: sensor.paz_workbench_summation_delivered
+            name:  WorkBench Energy Delivered
+            icon: mdi:bench-back
+          - entity: sensor.paz_garage_freezer_summation_delivered
+            name: Garage Freezer Energy Delivered
+            icon: mdi:fridge
+          - entity: sensor.third_reality_inc_3rsp02064z_summation_delivered_3
+            name:  Communications Stack Energy Delivered
+            icon: mdi:router-network
+          - entity: sensor.paz_garage_devices_washing_machine
+            Name: Washing Machine Enerty Delivered
+            icon: mdi:washing-machine
+
+  - title: "📺 Entertainment Room"
+    path: Entertainment Room-view
+    cards:
+      - type: custom:button-card
+        entity: sensor.man_cave_tv_room_man_cave_tv_room_temperature
+        name: Entertainment Temperature
+        icon: mdi:thermometer
+        show_state: true
+        show_icon: true
+        styles:
+          card:
+            - width: 125%
+            - min-width: 160px
+            - min-height: 82px
+            - margin: 0 auto
+            - border-radius: 12px
+            - padding: 6%
+            - background: rgba(255,255,255,0.04)
+          name:
+            - font-size: 14px
+          state:
+            - color: red
+            - font-size: 14px
+            - font-weight: bold
+          icon:
+            - color: red
+            - width: 20px
+            - height: 20px
+
+      - type: custom:button-card
+        entity: sensor.man_cave_tv_room_man_cave_tv_room_humidity
+        name: Entertainment Humidity
+        icon: mdi:water-percent
+        show_state: true
+        show_icon: true
+        styles:
+          card:
+            - width: 125%
+            - min-width: 170px
+            - min-height: 82px
+            - margin: 0 auto
+            - border-radius: 12px
+            - padding: 6%
+            - background: rgba(255,255,255,0.04)
+          name:
+            - font-size: 14px
+          state:
+            - color: blue
+            - font-size: 14px
+            - font-weight: bold
+          icon:
+            - color: blue
+            - width: 20px
+            - height: 20px
+
+      - type: entities
+        title: Current power
+        entities:
+          - entity: sensor.third_reality_inc_3rsp02064z_power_2
+            name: Entertainment System Power Used
+            icon: mdi:television-classic
+          - entity: sensor.man_cave_tv_room_big_a_c_power
+            name: Big Air Conditioner Power Used
+            icon: mdi:air-conditioner
+          - entity: sensor.man_cave_tv_room_paz_computer_power_used
+            name: Paz-Computer Power Used
+            icon: mdi:desktop-tower
+
+      - type: history-graph
+        title: Room power history
+        hours_to_show: 24
+        entities:
+          - entity: sensor.third_reality_inc_3rsp02064z_power_2
+            name: Entertainment System Power Used
+          - entity: sensor.man_cave_tv_room_big_a_c_power
+            name: Big Air Conditioner Power Used
+          - entity: sensor.man_cave_tv_room_paz_computer_power_used
+            name: Paz-Computer Power Used
+
+      - type: entities
+        title: Energy delivered
+        entities:
+          - entity: sensor.third_reality_inc_3rsp02064z_summation_delivered_2
+            name: Entertainment System Energy Delivered
+            icon: mdi:television-guide
+          - entity: sensor.man_cave_tv_room_big_a_c_summation_delivered
+            name: Big Air Conditioner Energy Delivered
+            icon: mdi:air-conditioner
+          - entity: sensor.man_cave_tv_room_paz_computer_summation_delivered
+            name: Paz-Computer Energy Delivered
+            icon: mdi:desktop-tower
+
+      - type: grid
+        title: A/C Controls
+        columns: 3
+        square: false
+        cards:
+          - type: custom:button-card
+            entity: remote.man_cave_ir_blaster
+            name: AC Power
+            icon: mdi:air-conditioner
+            show_state: false
+            show_icon: true
+            tap_action:
+              action: call-service
+              service: remote.send_command
+              target:
+                entity_id: remote.man_cave_ir_blaster
+              service_data:
+                device: "Man Cave A/C Power on"
+                command: "Power On/Off"
+            styles:
+              card:
+                - border-radius: 12px
+                - padding: 6%
+                - background: rgba(255,255,255,0.04)
+              name:
+                - font-size: 14px
+              icon:
+                - width: 20px
+                - height: 20px
+
+          - type: custom:button-card
+            entity: remote.man_cave_ir_blaster
+            name: Temp Up
+            icon: mdi:thermometer-chevron-up
+            show_state: false
+            show_icon: true
+            tap_action:
+              action: call-service
+              service: remote.send_command
+              target:
+                entity_id: remote.man_cave_ir_blaster
+              service_data:
+                device: "Man Cave A/C Power on"
+                command: "Temp Up"
+            styles:
+              card:
+                - border-radius: 12px
+                - padding: 6%
+                - background: rgba(255,255,255,0.04)
+              name:
+                - font-size: 14px
+              icon:
+                - width: 20px
+                - height: 20px
+
+          - type: custom:button-card
+            entity: remote.man_cave_ir_blaster
+            name: Temp Down
+            icon: mdi:thermometer-chevron-down
+            show_state: false
+            show_icon: true
+            tap_action:
+              action: call-service
+              service: remote.send_command
+              target:
+                entity_id: remote.man_cave_ir_blaster
+              service_data:
+                device: "Man Cave A/C Power on"
+                command: "Temp Down"
+            styles:
+              card:
+                - border-radius: 12px
+                - padding: 6%
+                - background: rgba(255,255,255,0.04)
+              name:
+                - font-size: 14px
+              icon:
+                - width: 20px
+                - height: 20px
+
+          - type: custom:button-card
+            entity: remote.man_cave_ir_blaster
+            name: Fan Speed
+            icon: mdi:fan
+            show_state: false
+            show_icon: true
+            tap_action:
+              action: call-service
+              service: remote.send_command
+              target:
+                entity_id: remote.man_cave_ir_blaster
+              service_data:
+                device: "Man Cave A/C Power on"
+                command: "Fan Speed"
+            styles:
+              card:
+                - border-radius: 12px
+                - padding: 6%
+                - background: rgba(255,255,255,0.04)
+              name:
+                - font-size: 14px
+              icon:
+                - width: 20px
+                - height: 20px
+
+          - type: custom:button-card
+            entity: remote.man_cave_ir_blaster
+            name: Timer
+            icon: mdi:timer-outline
+            show_state: false
+            show_icon: true
+            tap_action:
+              action: call-service
+              service: remote.send_command
+              target:
+                entity_id: remote.man_cave_ir_blaster
+              service_data:
+                device: "Man Cave A/C Power on"
+                command: "Timer"
+            styles:
+              card:
+                - border-radius: 12px
+                - padding: 6%
+                - background: rgba(255,255,255,0.04)
+              name:
+                - font-size: 14px
+              icon:
+                - width: 20px
+                - height: 20px
+
+          - type: custom:button-card
+            entity: remote.man_cave_ir_blaster
+            name: Mode
+            icon: mdi:sync
+            show_state: false
+            show_icon: true
+            tap_action:
+              action: call-service
+              service: remote.send_command
+              target:
+                entity_id: remote.man_cave_ir_blaster
+              service_data:
+                device: "Man Cave A/C Power on"
+                command: "Mode"
+            styles:
+              card:
+                - border-radius: 12px
+                - padding: 6%
+                - background: rgba(255,255,255,0.04)
+              name:
+                - font-size: 14px
+              icon:
+                - width: 20px
+                - height: 20px
+
+  - title: "🍽️ Kitchen/Dinning Room"
+    path: kitchen
+    cards:
+      - type: custom:button-card
+        entity: sensor.h5075_87cd_temperature
+        name: Kitchen Temperature
+        icon: mdi:thermometer
+        show_state: true
+        show_icon: true
+        styles:
+          card:
+            - width: 125%
+            - min-width: 160px
+            - min-height: 82px
+            - margin: 0 auto
+            - border-radius: 12px
+            - padding: 6%
+            - background: rgba(255,255,255,0.04)
+          name:
+            - font-size: 14px
+          state:
+            - color: red
+            - font-size: 14px
+            - font-weight: bold
+          icon:
+            - color: red
+            - width: 20px
+            - height: 20px
+
+      - type: custom:button-card
+        entity: sensor.h5075_87cd_humidity
+        name: Kitchen Humidity
+        icon: mdi:water-percent
+        show_state: true
+        show_icon: true
+        styles:
+          card:
+            - width: 125%
+            - min-width: 160px
+            - min-height: 82px
+            - margin: 0 auto
+            - border-radius: 12px
+            - padding: 6%
+            - background: rgba(255,255,255,0.04)
+          name:
+            - font-size: 14px
+          state:
+            - color: blue
+            - font-size: 14px
+            - font-weight: bold
+          icon:
+            - color: blue
+            - width: 20px
+            - height: 20px
+
+      - type: custom:button-card
+        entity: sensor.dinning_room_aquarium_temperature
+        name: Aquarium Temperature
+        icon: mdi:thermometer
+        show_state: true
+        show_icon: true
+        styles:
+          card:
+            - width: 125%
+            - min-width: 160px
+            - min-height: 82px
+            - margin: 0 auto
+            - border-radius: 12px
+            - padding: 6%
+            - background: rgba(255,255,255,0.04)
+          name:
+            - font-size: 14px
+          state:
+            - color: red
+            - font-size: 14px
+            - font-weight: bold
+          icon:
+            - color: red
+            - width: 20px
+            - height: 20px
+
+      - type: custom:button-card
+        entity: switch.aquirium_co2_switch
+        name: Aquarium CO2
+        icon: mdi:molecule-co2
+        show_state: true
+        show_icon: true
+        styles:
+          card:
+            - min-width: 160px
+            - min-height: 82px
+
+            - width: 125%
+            - margin: 0 auto
+            - border-radius: 12px
+            - padding: 6%
+            - background: rgba(255,255,255,0.04)
+          name:
+            - font-size: 14px
+          state:
+            - font-size: 14px
+            - font-weight: bold
+          icon:
+            - width: 20px
+            - height: 20px
+
+
+
+      - type: gauge
+        entity: sensor.cooktop_power_total
+        name: Cooktop power
+        min: 0
+        max: 7500
+        needle: true
+        segments:
+          - from: 0
+            color: "#43a047"
+          - from: 5000
+            color: "#ffa600"
+          - from: 6000
+            color: "#db4437"
+
+      - type: entities
+        title: Power Used
+        entities:
+          - entity: sensor.third_reality_inc_3rsp02064z_power
+            name: Refrigerator Power Used
+            icon: mdi:fridge
+          - entity: sensor.aquarium_power
+            name: Aquarium Power Used
+            icon: mdi:fishbowl-outline
+          - entity: sensor.kitchen_microwave_keurig_small_microwave_power
+            name: Small Microwave Power Used
+            icon: mdi:microwave
+          - entity: sensor.kitchen_microwave_keurig_keurig_power
+            name: Keurig
+            icon: mdi:coffee-maker
+          #- entity: sensor.stove_phase_a_power_positive
+          - entity: sensor.kitchen_stove_phase_a_kitchen_stove_phase_a_power
+            name: Stove-Shelly-Phase_A
+            icon: mdi:pot-steam-outline
+          #- entity: sensor.stove_phase_b_power_positive
+          - entity: sensor.kitchen_stove_phase_b_kitchen_stove_phase_b_power
+            name: Stove-Shelly-Phase_B
+            icon: mdi:pot-steam-outline
+
+
+
+
+      - type: history-graph
+        title: Room power history
+        hours_to_show: 24
+        entities:
+          - entity: sensor.third_reality_inc_3rsp02064z_power
+            name: Refrigerator Power Used
+          - entity: sensor.aquarium_power
+            name: Aquarium Power Used
+          - entity: sensor.kitchen_microwave_keurig_small_microwave_power
+            name: Small Microwave Power Used
+          - entity: sensor.kitchen_microwave_keurig_keurig_power
+            name: Keurig Power Used
+          #- entity: sensor.stove_phase_a_power_positive
+          - entity: sensor.kitchen_stove_phase_a_kitchen_stove_phase_a_power
+            name: Stove-Shelly-Phase_A Power Used
+          #- entity: sensor.stove_phase_b_power_positive
+          - entity: sensor.kitchen_stove_phase_b_kitchen_stove_phase_b_power
+            name: Stove-Shelly-Phase_B Power Used
+
+
+
+      - type: entities
+        title: Energy Delivered
+        entities:
+          - entity: sensor.third_reality_inc_3rsp02064z_summation_delivered
+            name: Refrigerator Energy Delivered
+            icon: mdi:fridge
+          - entity: sensor.aquarium_summation_delivered
+            name: Aquarium Energy Delivered
+            icon: mdi:fishbowl-outline
+          - entity: sensor.kitchen_microwave_keurig_small_microwave_summation_2
+            name: Small Microwave
+            icon: mdi:microwave
+          - entity: sensor.kitchen_microwave_keurig_keurig_summation_delivered
+            name: Keurig
+            icon: mdi:coffee-maker
+          - entity: sensor.stove_total_energy_kwh
+            name: Kitchen StoveTop Energy
+            icon: mdi:pot-steam-outline
+
+
+
+  - title: "🛏️ All Bedrooms"
+    path: Bedrooms
+    cards:
+      - type: custom:button-card
+        entity: sensor.master_bedroom_master_bedroom_temp_sensor_temperature
+        name: Master Bedroom Temperature
+        icon: mdi:thermometer
+        show_state: true
+        show_icon: true
+        styles:
+          card:
+            - width: 125%
+            - min-width: 160px
+            - min-height: 82px
+            - margin: 0 auto
+            - border-radius: 12px
+            - padding: 6%
+            - background: rgba(255,255,255,0.04)
+          name:
+            - font-size: 14px
+          state:
+            - color: red
+            - font-size: 14px
+            - font-weight: bold
+          icon:
+            - color: red
+            - width: 20px
+            - height: 20px
+
+      - type: custom:button-card
+        entity: sensor.master_bedroom_master_bedroom_temp_sensor_humidity
+        name: Master Bedroom Humidity
+        icon: mdi:water-percent
+        show_state: true
+        show_icon: true
+        styles:
+          card:
+            - width: 125%
+            - min-width: 190px
+            - min-height: 82px
+            - margin: 0 auto
+            - border-radius: 12px
+            - padding: 6%
+            - background: rgba(255,255,255,0.04)
+          name:
+            - font-size: 14px
+          state:
+            - color: blue
+            - font-size: 14px
+            - font-weight: bold
+          icon:
+            - color: blue
+            - width: 20px
+            - height: 20px
+
+      - type: custom:button-card
+        entity: sensor.mario_bedroom_mario_bedroom_temp_temperature
+        name: Mario Bedroom Temperature
+        icon: mdi:thermometer
+        show_state: true
+        show_icon: true
+        styles:
+          card:
+            - width: 125%
+            - min-width: 160px
+            - min-height: 82px
+            - margin: 0 auto
+            - border-radius: 12px
+            - padding: 6%
+            - background: rgba(255,255,255,0.04)
+          name:
+            - font-size: 14px
+          state:
+            - color: red
+            - font-size: 14px
+            - font-weight: bold
+          icon:
+            - color: red
+            - width: 20px
+            - height: 20px
+
+      - type: custom:button-card
+        entity: sensor.mario_bedroom_mario_bedroom_temp_humidity
+        name: Mario Bedroom Humidity
+        icon: mdi:water-percent
+        show_state: true
+        show_icon: true
+        styles:
+          card:
+            - width: 125%
+            - min-width: 180px
+            - min-height: 82px
+            - margin: 0 auto
+            - border-radius: 12px
+            - padding: 6%
+            - background: rgba(255,255,255,0.04)
+          name:
+            - font-size: 14px
+          state:
+            - color: blue
+            - font-size: 14px
+            - font-weight: bold
+          icon:
+            - color: blue
+            - width: 20px
+            - height: 20px
+
+      - type: custom:button-card
+        entity: sensor.millie_bedroom_millie_s_temperature_temperature
+        name: Millie Bedroom Temperature
+        icon: mdi:thermometer
+        show_state: true
+        show_icon: true
+        styles:
+          card:
+            - width: 125%
+            - min-width: 160px
+            - min-height: 82px
+            - margin: 0 auto
+            - border-radius: 12px
+            - padding: 6%
+            - background: rgba(255,255,255,0.04)
+          name:
+            - font-size: 14px
+          state:
+            - color: red
+            - font-size: 14px
+            - font-weight: bold
+          icon:
+            - color: red
+            - width: 20px
+            - height: 20px
+
+      - type: custom:button-card
+        entity: sensor.millie_bedroom_millie_s_temperature_humidity
+        name: Millie Bedroom Humidity
+        icon: mdi:water-percent
+        show_state: true
+        show_icon: true
+        styles:
+          card:
+            - width: 125%
+            - min-width: 180px
+            - min-height: 82px
+            - margin: 0 auto
+            - border-radius: 12px
+            - padding: 6%
+            - background: rgba(255,255,255,0.04)
+          name:
+            - font-size: 14px
+          state:
+            - color: blue
+            - font-size: 14px
+            - font-weight: bold
+          icon:
+            - color: blue
+            - width: 20px
+            - height: 20px
+
+      - type: entities
+        title: Power Used
+        entities:
+          - entity: sensor.master_bedroom_window_a_c_power
+            name: Master Bedroom A/C Power Used
+            icon: mdi:air-conditioner
+          - entity: sensor.master_bedroom_window_a_c_summation_delivered
+            name: Master Bedroom A/C Energy Delivered
+            icon: mdi:air-conditioner
+          - entity: sensor.mario_bedroom_mario_bedroom_a_c_power
+            name: Mario Bedroom A/C Power Used
+            icon: mdi:air-conditioner
+          - entity: sensor.mario_bedroom_mario_bedroom_a_c_summation_delivered
+            name: Mario Bedroom A/C Energy Delivered
+            icon: mdi:air-conditioner
+
+      - type: history-graph
+        title: Room power history
+        hours_to_show: 24
+        entities:
+          - entity: sensor.master_bedroom_window_a_c_power
+            name: Master Bedroom A/C Power Used
+          - entity: sensor.mario_bedroom_mario_bedroom_a_c_power
+            name: Mario Bedroom A/C Power Used

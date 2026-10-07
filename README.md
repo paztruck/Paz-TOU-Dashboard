@@ -29,5 +29,10 @@ The project consists of the following files:
 ## Usage
 After setting up the project, you can monitor your solar energy production and consumption through the Home Assistant dashboard. The defined sensors will provide real-time data, and automations can help manage energy usage efficiently.
 
+## PCS Meter Migration Notes
+The current SolarEdge PCS meter uses the unprefixed M2 entity names, including `sensor.my_solaredge_i1_m2_ac_power` and `sensor.my_solaredge_i1_m2_ac_energy_imported`. Do not substitute the retired `paz_garage_*` variants; they are not present in the live entity registry. The complete sensor capture is documented in [SE PCS Meter Sensors map.txt](SE%20PCS%20Meter%20Sensors%20map.txt).
+
+The retired inverter's lifetime production is preserved as a frozen offset. New production and TOU utility meters accumulate from the replacement inverter and PCS meter after the configuration reload; historical TOU values are not backfilled automatically.
+
 ## Contributing
 Contributions to the HA-SE-Energy project are welcome. Please submit a pull request or open an issue for any enhancements or bug fixes.

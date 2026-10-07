@@ -1,22 +1,24 @@
-script:
-  example_script:
-    alias: "Example Script"
-    sequence:
-      - service: light.turn_on
-        target:
-          entity_id: light.living_room
-      - delay: "00:00:05"
-      - service: light.turn_off
-        target:
-          entity_id: light.living_room
+learn_ir_for_a_c:
+  sequence: []
+  alias: Learn IR for A/C
+  description: ''
 
-  another_script:
-    alias: "Another Script"
-    sequence:
-      - service: switch.turn_on
-        target:
-          entity_id: switch.garage_door
-      - delay: "00:00:10"
-      - service: switch.turn_off
-        target:
-          entity_id: switch.garage_door
+backfill_august_2026_trueup_import:
+  alias: "Backfill August 2026 True-Up Import (SDG&E bill)"
+  # One-time seed of the True-Up import meters; adds the August bill on top of what's already tracked, then delete this script.
+  sequence:
+    - service: utility_meter.calibrate
+      target:
+        entity_id: sensor.tou_imported_energy_trueup_on_peak
+      data:
+        value: "{{ (states('sensor.tou_imported_energy_trueup_on_peak') | float(0)) + 191 }}"
+    - service: utility_meter.calibrate
+      target:
+        entity_id: sensor.tou_imported_energy_trueup_off_peak
+      data:
+        value: "{{ (states('sensor.tou_imported_energy_trueup_off_peak') | float(0)) + 114 }}"
+    - service: utility_meter.calibrate
+      target:
+        entity_id: sensor.tou_imported_energy_trueup_super_off_peak
+      data:
+        value: "{{ (states('sensor.tou_imported_energy_trueup_super_off_peak') | float(0)) + 55 }}"

@@ -1,1 +1,44 @@
-# This file is intentionally left blank.
+sensor.solar_imported_power_kwh:
+  device_class: energy
+  state_class: total_increasing
+  unit_of_measurement: kWh
+
+sensor.solar_exported_power_kwh:
+  device_class: energy
+  state_class: total_increasing
+  unit_of_measurement: kWh
+
+sensor.solar_panel_production_kwh:
+  device_class: energy
+  state_class: total_increasing
+  unit_of_measurement: kWh
+
+sensor.solar_panel_to_house_kwh:
+  device_class: energy
+  state_class: total_increasing
+  unit_of_measurement: kWh
+
+sensor.solar_panel_to_battery_kwh:
+  device_class: energy
+  state_class: total_increasing
+  unit_of_measurement: kWh
+
+sensor.solar_grid_to_battery_kwh:
+  device_class: energy
+  state_class: total_increasing
+  unit_of_measurement: kWh
+
+sensor.solar_battery_out_kwh:
+  device_class: energy
+  state_class: total_increasing
+  unit_of_measurement: kWh
+
+sensor.solar_battery_in_kwh:
+  device_class: energy
+  state_class: total_increasing
+  unit_of_measurement: kWh
+
+sensor.solar_house_consumption_kwh:
+  device_class: energy
+  state_class: total_increasing
+  unit_of_measurement: kWh

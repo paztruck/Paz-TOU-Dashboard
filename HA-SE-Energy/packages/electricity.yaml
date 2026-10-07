@@ -21,7 +21,7 @@ template:
         state: >
           {% set i1_dc_power = states('sensor.solaredge_i1_dc_power') | float(0) %}
           {% set i1_ac_power = states('sensor.solaredge_i1_ac_power') | float(0) %}
-          {% set grid_ac_power = states('sensor.paz_garage_paz_solaredge_i1_m2_ac_power') | float(0) %}
+          {% set grid_ac_power = states('sensor.my_solaredge_i1_m2_ac_power') | float(0) %}
 
           {% if (grid_ac_power > 0) %}
             {% if (i1_dc_power < 0 and i1_ac_power <= 0) %}
@@ -39,7 +39,7 @@ template:
             0
           {% endif %}
         availability: >
-          {{ states('sensor.solaredge_i1_dc_power') | is_number and states('sensor.solaredge_i1_ac_power') | is_number and states('sensor.paz_garage_paz_solaredge_i1_m2_ac_power') | is_number }}
+          {{ states('sensor.solaredge_i1_dc_power') | is_number and states('sensor.solaredge_i1_ac_power') | is_number and states('sensor.my_solaredge_i1_m2_ac_power') | is_number }}
 
       - name: "Solar Panel To Battery W"
         unique_id: solar_panel_to_battery_w
@@ -82,7 +82,7 @@ template:
         unit_of_measurement: "W"
         icon: mdi:transmission-tower-export
         state: >
-          {% set grid_ac_power = states('sensor.paz_garage_paz_solaredge_i1_m2_ac_power') | float(0) %}
+          {% set grid_ac_power = states('sensor.my_solaredge_i1_m2_ac_power') | float(0) %}
           {% set grid_to_battery_w = states('sensor.solar_grid_to_battery_w') | float(0) %}
 
           {% if (grid_ac_power <= 0) %}
@@ -91,7 +91,7 @@ template:
             0
           {% endif %}
         availability: >
-          {{ states('sensor.paz_garage_paz_solaredge_i1_m2_ac_power') | is_number }}
+          {{ states('sensor.my_solaredge_i1_m2_ac_power') | is_number }}
           
       - name: "Solar Grid To Battery W"
         unique_id: solar_grid_to_battery_w
@@ -128,7 +128,7 @@ template:
         unit_of_measurement: "W"
         icon: mdi:transmission-tower-export
         state: >
-          {% set grid_ac_power = states('sensor.paz_garage_paz_solaredge_i1_m2_ac_power') | float(0) %}
+          {% set grid_ac_power = states('sensor.my_solaredge_i1_m2_ac_power') | float(0) %}
 
           {% if (grid_ac_power < 0) %}
             {{ (grid_ac_power * -1) }}
@@ -136,14 +136,14 @@ template:
             0
           {% endif %}
         availability: >
-          {{ states('sensor.paz_garage_paz_solaredge_i1_m2_ac_power') | is_number}}
+          {{ states('sensor.my_solaredge_i1_m2_ac_power') | is_number}}
 
       - name: "Solar Exported Power W"
         unique_id: solar_exported_power_w
         unit_of_measurement: "W"
         icon: mdi:transmission-tower-import
         state: >
-          {% set grid_ac_power = states('sensor.paz_garage_paz_solaredge_i1_m2_ac_power') | float(0) %}
+          {% set grid_ac_power = states('sensor.my_solaredge_i1_m2_ac_power') | float(0) %}
 
           {% if (grid_ac_power > 0) %}
             {{ (grid_ac_power) }}

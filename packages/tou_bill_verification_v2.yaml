@@ -1,0 +1,1055 @@
+input_datetime:
+  tou_billing_start:
+    name: TOU billing start
+    has_date: true
+    has_time: false
+  tou_billing_end:
+    name: TOU billing end
+    has_date: true
+    has_time: false
+
+binary_sensor:
+  - platform: workday
+    name: US Workday
+    country: US
+    province: CA
+    workdays: [mon, tue, wed, thu, fri]
+    excludes: [sat, sun, holiday]
+
+input_boolean:
+  # Turn ON when SDG&E announces a Reduce Your Use event for today.
+  # Only the 4-9pm window is tracked; it switches itself back off at 9pm.
+  sdge_reduce_use_event_active:
+    name: SDG&E Reduce Your Use event active
+    icon: mdi:flash-alert
+
+input_button:
+  tou_apply_billing_reset:
+    name: Apply new billing cycle (reset TOU meters)
+    icon: mdi:calendar-refresh
+
+input_number:
+  sdge_reduce_use_event_kwh:
+    name: SDG&E Reduce Your Use kWh on bill
+    min: 0
+    max: 10000
+    step: 0.01
+    unit_of_measurement: "kWh"
+    mode: box
+#    initial: 0
+  sdge_reduce_use_billed_rate:
+    name: SDG&E Reduce Your Use billed rate
+    min: 0
+    max: 5
+    step: 0.00001
+    unit_of_measurement: "$/kWh"
+    mode: box
+    initial: 1.16000
+  sdge_reduce_use_actual_charge:
+    name: SDG&E Reduce Your Use actual charge
+    min: 0
+    max: 10000
+    step: 0.01
+    unit_of_measurement: "$"
+    mode: box
+#    initial: 0
+
+  sdge_delivery_rate:
+    name: SDG&E delivery rate
+    min: 0
+    max: 2
+    step: 0.00001
+    unit_of_measurement: "$/kWh"
+    mode: box
+    initial: 0.31093
+  sdge_nbc_rate:
+    name: SDG&E Non-Bypassable Charge (NBC) rate
+    min: 0
+    max: 1
+    step: 0.00001
+    unit_of_measurement: "$/kWh"
+    mode: box
+    initial: 0.02450
+  sdge_generation_on_peak:
+    name: SDG&E generation on-peak
+    min: 0
+    max: 2
+    step: 0.00001
+    unit_of_measurement: "$/kWh"
+    mode: box
+    initial: 0.20500
+  sdge_generation_off_peak:
+    name: SDG&E generation off-peak
+    min: 0
+    max: 2
+    step: 0.00001
+    unit_of_measurement: "$/kWh"
+    mode: box
+    initial: 0.16034
+  sdge_generation_super_off_peak:
+    name: SDG&E generation super off-peak
+    min: 0
+    max: 2
+    step: 0.00001
+    unit_of_measurement: "$/kWh"
+    mode: box
+    initial: 0.08518
+
+  # Annual True-Up archive (one block per cycle; add a new block each July before the Aug 1 reset)
+  trueup_archive_2026_imported_energy:
+    name: True-Up 2026 imported energy
+    min: 0
+    max: 100000
+    step: 0.001
+    unit_of_measurement: "kWh"
+    mode: box
+    initial: 0
+  trueup_archive_2026_house_energy:
+    name: True-Up 2026 house energy
+    min: 0
+    max: 100000
+    step: 0.001
+    unit_of_measurement: "kWh"
+    mode: box
+    initial: 0
+  trueup_archive_2026_solar_production:
+    name: True-Up 2026 solar production
+    min: 0
+    max: 100000
+    step: 0.001
+    unit_of_measurement: "kWh"
+    mode: box
+    initial: 0
+  trueup_archive_2026_exported_energy:
+    name: True-Up 2026 exported energy
+    min: 0
+    max: 100000
+    step: 0.001
+    unit_of_measurement: "kWh"
+    mode: box
+    initial: 0
+  trueup_archive_2026_solar_to_house:
+    name: True-Up 2026 solar to house
+    min: 0
+    max: 100000
+    step: 0.001
+    unit_of_measurement: "kWh"
+    mode: box
+    initial: 0
+
+  trueup_archive_2027_imported_energy:
+    name: True-Up 2027 imported energy
+    min: 0
+    max: 100000
+    step: 0.001
+    unit_of_measurement: "kWh"
+    mode: box
+    initial: 0
+  trueup_archive_2027_house_energy:
+    name: True-Up 2027 house energy
+    min: 0
+    max: 100000
+    step: 0.001
+    unit_of_measurement: "kWh"
+    mode: box
+    initial: 0
+  trueup_archive_2027_solar_production:
+    name: True-Up 2027 solar production
+    min: 0
+    max: 100000
+    step: 0.001
+    unit_of_measurement: "kWh"
+    mode: box
+    initial: 0
+  trueup_archive_2027_exported_energy:
+    name: True-Up 2027 exported energy
+    min: 0
+    max: 100000
+    step: 0.001
+    unit_of_measurement: "kWh"
+    mode: box
+    initial: 0
+  trueup_archive_2027_solar_to_house:
+    name: True-Up 2027 solar to house
+    min: 0
+    max: 100000
+    step: 0.001
+    unit_of_measurement: "kWh"
+    mode: box
+    initial: 0
+
+utility_meter:
+  # Daily TOU meters
+  tou_imported_energy_daily:
+    source: sensor.my_solaredge_i1_m2_ac_energy_imported
+    cycle: daily
+    tariffs:
+      - on_peak
+      - off_peak
+      - super_off_peak
+  tou_house_energy_daily:
+    source: sensor.solar_house_consumption_kwh
+    cycle: daily
+    tariffs:
+      - on_peak
+      - off_peak
+      - super_off_peak
+  tou_solar_production_daily:
+    source: sensor.solar_panel_production_kwh
+    cycle: daily
+    tariffs:
+      - on_peak
+      - off_peak
+      - super_off_peak
+  tou_exported_energy_daily:
+    source: sensor.my_solaredge_i1_m2_ac_energy_exported_m2
+    cycle: daily
+    tariffs:
+      - on_peak
+      - off_peak
+      - super_off_peak
+  tou_solar_to_house_daily:
+    source: sensor.solar_panel_to_house_kwh
+    cycle: daily
+    tariffs:
+      - on_peak
+      - off_peak
+      - super_off_peak
+
+  # Billing Cycle TOU meters (Reset via automation on billing start date or manually)
+  tou_imported_energy_billing_cycle:
+    source: sensor.my_solaredge_i1_m2_ac_energy_imported
+    cycle: yearly
+    tariffs:
+      - on_peak
+      - off_peak
+      - super_off_peak
+  tou_house_energy_billing_cycle:
+    source: sensor.solar_house_consumption_kwh
+    cycle: yearly
+    tariffs:
+      - on_peak
+      - off_peak
+      - super_off_peak
+  tou_solar_production_billing_cycle:
+    source: sensor.solar_panel_production_kwh
+    cycle: yearly
+    tariffs:
+      - on_peak
+      - off_peak
+      - super_off_peak
+  tou_exported_energy_billing_cycle:
+    source: sensor.my_solaredge_i1_m2_ac_energy_exported_m2
+    cycle: yearly
+    tariffs:
+      - on_peak
+      - off_peak
+      - super_off_peak
+  tou_solar_to_house_billing_cycle:
+    source: sensor.solar_panel_to_house_kwh
+    cycle: yearly
+    tariffs:
+      - on_peak
+      - off_peak
+      - super_off_peak
+
+  # Reduce Your Use event meter (billing-cycle aligned; reset with the billing-cycle meters).
+  # Accumulates grid import only while an event is active AND it is 4-9pm.
+  # Read it from sensor.tou_imported_energy_reduce_use_event_event
+  tou_imported_energy_reduce_use_event:
+    source: sensor.my_solaredge_i1_m2_ac_energy_imported
+    cycle: yearly
+    tariffs:
+      - normal
+      - event
+  # Same idea, but resets every day so you can see just today's event window.
+  # Read it from sensor.tou_imported_energy_reduce_use_daily_event
+  tou_imported_energy_reduce_use_daily:
+    source: sensor.my_solaredge_i1_m2_ac_energy_imported
+    cycle: daily
+    tariffs:
+      - normal
+      - event
+
+  # Billing-aligned "monthly" TOU meters (reset together with the billing-cycle meters by the
+  # billing-start automation and the manual reset button; the calendar cycle is only a fallback)
+  tou_imported_energy_monthly:
+    source: sensor.my_solaredge_i1_m2_ac_energy_imported
+    cycle: monthly
+    tariffs:
+      - on_peak
+      - off_peak
+      - super_off_peak
+  tou_house_energy_monthly:
+    source: sensor.solar_house_consumption_kwh
+    cycle: monthly
+    tariffs:
+      - on_peak
+      - off_peak
+      - super_off_peak
+  tou_solar_production_monthly:
+    source: sensor.solar_panel_production_kwh
+    cycle: monthly
+    tariffs:
+      - on_peak
+      - off_peak
+      - super_off_peak
+  tou_exported_energy_monthly:
+    source: sensor.my_solaredge_i1_m2_ac_energy_exported_m2
+    cycle: monthly
+    tariffs:
+      - on_peak
+      - off_peak
+      - super_off_peak
+  tou_solar_to_house_monthly:
+    source: sensor.solar_panel_to_house_kwh
+    cycle: monthly
+    tariffs:
+      - on_peak
+      - off_peak
+      - super_off_peak
+
+  # SDG&E Annual True-Up Cycle (August 1st to July 31st)
+  tou_imported_energy_trueup:
+    source: sensor.my_solaredge_i1_m2_ac_energy_imported
+    cron: "0 0 1 8 *"
+    tariffs:
+      - on_peak
+      - off_peak
+      - super_off_peak
+  tou_house_energy_trueup:
+    source: sensor.solar_house_consumption_kwh
+    cron: "0 0 1 8 *"
+    tariffs:
+      - on_peak
+      - off_peak
+      - super_off_peak
+  tou_solar_production_trueup:
+    source: sensor.solar_panel_production_kwh
+    cron: "0 0 1 8 *"
+    tariffs:
+      - on_peak
+      - off_peak
+      - super_off_peak
+  tou_exported_energy_trueup:
+    source: sensor.my_solaredge_i1_m2_ac_energy_exported_m2
+    cron: "0 0 1 8 *"
+    tariffs:
+      - on_peak
+      - off_peak
+      - super_off_peak
+  tou_solar_to_house_trueup:
+    source: sensor.solar_panel_to_house_kwh
+    cron: "0 0 1 8 *"
+    tariffs:
+      - on_peak
+      - off_peak
+      - super_off_peak
+
+automation:
+  - id: tou_set_daily_tariff
+    alias: TOU set daily tariff
+    trigger:
+      - platform: homeassistant
+        event: start
+      - platform: time
+        at: "00:00:00"
+      - platform: time
+        at: "06:00:00"
+      - platform: time
+        at: "10:00:00"
+      - platform: time
+        at: "14:00:00"
+      - platform: time
+        at: "16:00:00"
+      - platform: time
+        at: "21:00:00"
+    action:
+      - variables:
+          tariff: >-
+            {% set hour = now().hour %}
+            {% set is_offday = states('binary_sensor.us_workday') == 'off' %}
+            {% if hour >= 16 and hour < 21 %}
+              on_peak
+            {% elif is_offday and hour < 14 %}
+              super_off_peak
+            {% elif not is_offday and (hour < 6 or (hour >= 10 and hour < 14)) %}
+              super_off_peak
+            {% else %}
+              off_peak
+            {% endif %}
+      - service: select.select_option
+        target:
+          entity_id:
+            - select.tou_imported_energy_daily
+            - select.tou_house_energy_daily
+            - select.tou_solar_production_daily
+            - select.tou_exported_energy_daily
+            - select.tou_solar_to_house_daily
+            - select.tou_imported_energy_billing_cycle
+            - select.tou_house_energy_billing_cycle
+            - select.tou_solar_production_billing_cycle
+            - select.tou_exported_energy_billing_cycle
+            - select.tou_solar_to_house_billing_cycle
+            - select.tou_imported_energy_monthly
+            - select.tou_house_energy_monthly
+            - select.tou_solar_production_monthly
+            - select.tou_exported_energy_monthly
+            - select.tou_solar_to_house_monthly
+            - select.tou_cooktop_energy_monthly
+            - select.tou_imported_energy_trueup
+            - select.tou_house_energy_trueup
+            - select.tou_solar_production_trueup
+            - select.tou_exported_energy_trueup
+            - select.tou_solar_to_house_trueup
+        data:
+          option: "{{ tariff | trim }}"
+
+  # Reduce Your Use event tracking: "event" only while the boolean is on AND 4pm-9pm.
+  - id: tou_reduce_use_event_tariff
+    alias: TOU Reduce Your Use event tariff
+    trigger:
+      - platform: homeassistant
+        event: start
+      - platform: state
+        entity_id: input_boolean.sdge_reduce_use_event_active
+      - platform: time
+        at: "16:00:00"
+      - platform: time
+        at: "21:00:00"
+    action:
+      - service: select.select_option
+        target:
+          entity_id:
+            - select.tou_imported_energy_reduce_use_event
+            - select.tou_imported_energy_reduce_use_daily
+        data:
+          option: >-
+            {% if is_state('input_boolean.sdge_reduce_use_event_active', 'on') and 16 <= now().hour < 21 %}event{% else %}normal{% endif %}
+
+  # Safety net: the event flag clears itself at 9pm so it can't stay on for the next day.
+  # The startup trigger covers a restart that happened across 9pm; the hour check keeps a
+  # mid-event restart (4-9pm) from clearing the flag.
+  - id: tou_reduce_use_event_auto_off
+    alias: TOU Reduce Your Use event auto-off
+    trigger:
+      - platform: time
+        at: "21:00:05"
+      - platform: homeassistant
+        event: start
+    condition:
+      - condition: state
+        entity_id: input_boolean.sdge_reduce_use_event_active
+        state: "on"
+      - condition: template
+        value_template: "{{ now().hour >= 21 or now().hour < 16 }}"
+    action:
+      - service: input_boolean.turn_off
+        target:
+          entity_id: input_boolean.sdge_reduce_use_event_active
+
+  - id: tou_reset_monthly_meters_on_billing_start
+    alias: TOU reset monthly meters on billing start
+    trigger:
+      - platform: time
+        at: "00:00:01"
+    condition:
+      - condition: template
+        value_template: >-
+          {% set start = states('input_datetime.tou_billing_start') %}
+          {% set end_plus_1 = (as_timestamp(states('input_datetime.tou_billing_end')) + 86400) | timestamp_custom('%Y-%m-%d', true) %}
+          {% set today = now().strftime('%Y-%m-%d') %}
+          {{ today == start or today == end_plus_1 }}
+    action:
+      - service: utility_meter.reset
+        target:
+          entity_id:
+            - select.tou_imported_energy_billing_cycle
+            - select.tou_house_energy_billing_cycle
+            - select.tou_solar_production_billing_cycle
+            - select.tou_exported_energy_billing_cycle
+            - select.tou_solar_to_house_billing_cycle
+            - select.tou_imported_energy_reduce_use_event
+            - select.tou_imported_energy_monthly
+            - select.tou_house_energy_monthly
+            - select.tou_solar_production_monthly
+            - select.tou_exported_energy_monthly
+            - select.tou_solar_to_house_monthly
+            - select.tou_cooktop_energy_monthly
+
+  - id: tou_manual_billing_reset
+    alias: TOU manual billing cycle reset
+    description: >-
+      Press the "Apply new billing cycle" button any time (e.g. after updating
+      tou_billing_start/tou_billing_end mid-cycle) to reset the billing-cycle,
+      event and monthly TOU meters immediately, without waiting for the exact-date
+      match in tou_reset_monthly_meters_on_billing_start.
+    trigger:
+      - platform: state
+        entity_id: input_button.tou_apply_billing_reset
+    action:
+      - service: utility_meter.reset
+        target:
+          entity_id:
+            - select.tou_imported_energy_billing_cycle
+            - select.tou_house_energy_billing_cycle
+            - select.tou_solar_production_billing_cycle
+            - select.tou_exported_energy_billing_cycle
+            - select.tou_solar_to_house_billing_cycle
+            - select.tou_imported_energy_reduce_use_event
+            - select.tou_imported_energy_monthly
+            - select.tou_house_energy_monthly
+            - select.tou_solar_production_monthly
+            - select.tou_exported_energy_monthly
+            - select.tou_solar_to_house_monthly
+            - select.tou_cooktop_energy_monthly
+
+  - id: tou_archive_annual_trueup
+    alias: TOU archive annual true-up
+    # Snapshots the totals just before the Aug 1 reset; add next year's trueup_archive_* input_numbers before this fires.
+    trigger:
+      - platform: time
+        at: "23:59:50"
+    condition:
+      - condition: template
+        value_template: "{{ now().month == 7 and now().day == 31 }}"
+    action:
+      - variables:
+          archive_year: "{{ now().year - 1 }}"
+      - service: input_number.set_value
+        target:
+          entity_id: "input_number.trueup_archive_{{ archive_year }}_imported_energy"
+        data:
+          value: "{{ states('sensor.tou_imported_energy_trueup') | float(0) }}"
+      - service: input_number.set_value
+        target:
+          entity_id: "input_number.trueup_archive_{{ archive_year }}_house_energy"
+        data:
+          value: "{{ states('sensor.tou_house_energy_trueup') | float(0) }}"
+      - service: input_number.set_value
+        target:
+          entity_id: "input_number.trueup_archive_{{ archive_year }}_solar_production"
+        data:
+          value: "{{ states('sensor.tou_solar_production_trueup') | float(0) }}"
+      - service: input_number.set_value
+        target:
+          entity_id: "input_number.trueup_archive_{{ archive_year }}_exported_energy"
+        data:
+          value: "{{ states('sensor.tou_exported_energy_trueup') | float(0) }}"
+      - service: input_number.set_value
+        target:
+          entity_id: "input_number.trueup_archive_{{ archive_year }}_solar_to_house"
+        data:
+          value: "{{ states('sensor.tou_solar_to_house_trueup') | float(0) }}"
+
+template:
+  - sensor:
+      - name: TOU period
+        unique_id: tou_period
+        state: >
+          {% set hour = now().hour %}
+          {% set is_offday = states('binary_sensor.us_workday') == 'off' %}
+          {% if hour >= 16 and hour < 21 %}
+            on_peak
+          {% elif is_offday and hour < 14 %}
+            super_off_peak
+          {% elif not is_offday and (hour < 6 or (hour >= 10 and hour < 14)) %}
+            super_off_peak
+          {% else %}
+            off_peak
+          {% endif %}
+
+      - name: SDG&E delivery rate
+        unique_id: sdge_delivery_rate
+        default_entity_id: sensor.sdg_e_delivery_rate
+        unit_of_measurement: "$/kWh"
+        state: "{{ states('input_number.sdge_delivery_rate') }}"
+
+      - name: SDG&E generation rate
+        unique_id: sdge_generation_rate
+        default_entity_id: sensor.sdg_e_generation_rate
+        unit_of_measurement: "$/kWh"
+        state: >
+          {% set period = states('sensor.tou_period') %}
+          {% if period == 'on_peak' %}
+            {{ states('input_number.sdge_generation_on_peak') }}
+          {% elif period == 'super_off_peak' %}
+            {{ states('input_number.sdge_generation_super_off_peak') }}
+          {% else %}
+            {{ states('input_number.sdge_generation_off_peak') }}
+          {% endif %}
+
+      - name: SDG&E total import rate
+        unique_id: sdge_total_import_rate
+        default_entity_id: sensor.sdg_e_total_import_rate
+        unit_of_measurement: "$/kWh"
+        state: >
+          {{ (states('sensor.sdg_e_delivery_rate') | float(0) + states('sensor.sdg_e_generation_rate') | float(0)) | round(5) }}
+
+      - name: TOU billing period
+        unique_id: tou_billing_period
+        state: >
+          {{ states('input_datetime.tou_billing_start') }} through {{ states('input_datetime.tou_billing_end') }}
+        attributes:
+          start: "{{ states('input_datetime.tou_billing_start') }}"
+          end: "{{ states('input_datetime.tou_billing_end') }}"
+
+      - name: TOU billing cycle length
+        unique_id: tou_billing_cycle_length
+        unit_of_measurement: "days"
+        state: >
+          {% set start = as_datetime(states('input_datetime.tou_billing_start')) %}
+          {% set end = as_datetime(states('input_datetime.tou_billing_end')) %}
+          {{ (end - start).days }}
+
+      - name: TOU estimated next billing end
+        unique_id: tou_estimated_next_billing_end
+        device_class: date
+        state: >
+          {# SDG&E's cycle drifts around ~27-31 days; extrapolate from the current cycle's length #}
+          {% set end = as_datetime(states('input_datetime.tou_billing_end')) %}
+          {% set length = states('sensor.tou_billing_cycle_length') | int(30) %}
+          {{ (end + timedelta(days=length)).date() }}
+        attributes:
+          assumed_cycle_length_days: "{{ states('sensor.tou_billing_cycle_length') }}"
+
+      - name: TOU import cost today
+        unique_id: tou_import_cost_today
+        unit_of_measurement: "$"
+        state: >
+          {% set on_peak = states('sensor.tou_imported_energy_daily_on_peak') | float(0) %}
+          {% set off_peak = states('sensor.tou_imported_energy_daily_off_peak') | float(0) %}
+          {% set super_off_peak = states('sensor.tou_imported_energy_daily_super_off_peak') | float(0) %}
+          {% set delivery = states('input_number.sdge_delivery_rate') | float(0) %}
+          {% set on_peak_rate = delivery + states('input_number.sdge_generation_on_peak') | float(0) %}
+          {% set off_peak_rate = delivery + states('input_number.sdge_generation_off_peak') | float(0) %}
+          {% set super_off_peak_rate = delivery + states('input_number.sdge_generation_super_off_peak') | float(0) %}
+          {{ (on_peak * on_peak_rate + off_peak * off_peak_rate + super_off_peak * super_off_peak_rate) | round(2) }}
+        attributes:
+          note: "Daily estimate uses the dedicated on-peak, off-peak, and super off-peak utility meters."
+
+      - name: TOU imported energy today
+        unique_id: tou_imported_energy_today
+        unit_of_measurement: "kWh"
+        device_class: energy
+        state: >
+          {{ (states('sensor.tou_imported_energy_daily_on_peak') | float(0)
+            + states('sensor.tou_imported_energy_daily_off_peak') | float(0)
+            + states('sensor.tou_imported_energy_daily_super_off_peak') | float(0)) | round(3) }}
+
+      - name: TOU solar production today
+        unique_id: tou_solar_production_today
+        unit_of_measurement: "kWh"
+        device_class: energy
+        state: >
+          {{ (states('sensor.tou_solar_production_daily_on_peak') | float(0)
+            + states('sensor.tou_solar_production_daily_off_peak') | float(0)
+            + states('sensor.tou_solar_production_daily_super_off_peak') | float(0)) | round(3) }}
+
+      - name: TOU solar to house today
+        unique_id: tou_solar_to_house_today
+        unit_of_measurement: "kWh"
+        device_class: energy
+        state: >
+          {{ (states('sensor.tou_solar_to_house_daily_on_peak') | float(0)
+            + states('sensor.tou_solar_to_house_daily_off_peak') | float(0)
+            + states('sensor.tou_solar_to_house_daily_super_off_peak') | float(0)) | round(3) }}
+
+      - name: TOU exported energy today
+        unique_id: tou_exported_energy_today
+        unit_of_measurement: "kWh"
+        device_class: energy
+        state: >
+          {{ (states('sensor.tou_exported_energy_daily_on_peak') | float(0)
+            + states('sensor.tou_exported_energy_daily_off_peak') | float(0)
+            + states('sensor.tou_exported_energy_daily_super_off_peak') | float(0)) | round(3) }}
+
+      - name: TOU house energy today
+        unique_id: tou_house_energy_today
+        unit_of_measurement: "kWh"
+        device_class: energy
+        state: >
+          {{ (states('sensor.tou_house_energy_daily_on_peak') | float(0)
+            + states('sensor.tou_house_energy_daily_off_peak') | float(0)
+            + states('sensor.tou_house_energy_daily_super_off_peak') | float(0)) | round(3) }}
+
+      # Monthly Cycle Summary Totals
+      - name: TOU solar production monthly
+        unique_id: tou_solar_production_monthly
+        unit_of_measurement: "kWh"
+        device_class: energy
+        state: >
+          {{ (states('sensor.tou_solar_production_monthly_on_peak') | float(0)
+            + states('sensor.tou_solar_production_monthly_off_peak') | float(0)
+            + states('sensor.tou_solar_production_monthly_super_off_peak') | float(0)) | round(3) }}
+
+      - name: TOU solar to house monthly
+        unique_id: tou_solar_to_house_monthly
+        unit_of_measurement: "kWh"
+        device_class: energy
+        state: >
+          {{ (states('sensor.tou_solar_to_house_monthly_on_peak') | float(0)
+            + states('sensor.tou_solar_to_house_monthly_off_peak') | float(0)
+            + states('sensor.tou_solar_to_house_monthly_super_off_peak') | float(0)) | round(3) }}
+
+      - name: TOU exported energy monthly
+        unique_id: tou_exported_energy_monthly
+        unit_of_measurement: "kWh"
+        device_class: energy
+        state: >
+          {{ (states('sensor.tou_exported_energy_monthly_on_peak') | float(0)
+            + states('sensor.tou_exported_energy_monthly_off_peak') | float(0)
+            + states('sensor.tou_exported_energy_monthly_super_off_peak') | float(0)) | round(3) }}
+
+      - name: TOU imported energy monthly
+        unique_id: tou_imported_energy_monthly
+        unit_of_measurement: "kWh"
+        device_class: energy
+        state: >
+          {{ (states('sensor.tou_imported_energy_monthly_on_peak') | float(0)
+            + states('sensor.tou_imported_energy_monthly_off_peak') | float(0)
+            + states('sensor.tou_imported_energy_monthly_super_off_peak') | float(0)) | round(3) }}
+
+      - name: TOU house energy monthly
+        unique_id: tou_house_energy_monthly
+        unit_of_measurement: "kWh"
+        device_class: energy
+        state: >
+          {{ (states('sensor.tou_house_energy_monthly_on_peak') | float(0)
+            + states('sensor.tou_house_energy_monthly_off_peak') | float(0)
+            + states('sensor.tou_house_energy_monthly_super_off_peak') | float(0)) | round(3) }}
+
+      # Solar Savings Calculations (Daily)
+      - name: TOU solar self-consumption savings today
+        unique_id: tou_solar_self_consumption_savings_today
+        unit_of_measurement: "$"
+        state: >
+          {% set del = states('input_number.sdge_delivery_rate') | float(0) %}
+          {% set r_on = del + states('input_number.sdge_generation_on_peak') | float(0) %}
+          {% set r_off = del + states('input_number.sdge_generation_off_peak') | float(0) %}
+          {% set r_sop = del + states('input_number.sdge_generation_super_off_peak') | float(0) %}
+          {% set kwh_on = states('sensor.tou_solar_to_house_daily_on_peak') | float(0) %}
+          {% set kwh_off = states('sensor.tou_solar_to_house_daily_off_peak') | float(0) %}
+          {% set kwh_sop = states('sensor.tou_solar_to_house_daily_super_off_peak') | float(0) %}
+          {{ (kwh_on * r_on + kwh_off * r_off + kwh_sop * r_sop) | round(2) }}
+
+      - name: TOU solar export credit today
+        unique_id: tou_solar_export_credit_today
+        unit_of_measurement: "$"
+        state: >
+          {% set del = states('input_number.sdge_delivery_rate') | float(0) %}
+          {% set r_on = del + states('input_number.sdge_generation_on_peak') | float(0) %}
+          {% set r_off = del + states('input_number.sdge_generation_off_peak') | float(0) %}
+          {% set r_sop = del + states('input_number.sdge_generation_super_off_peak') | float(0) %}
+          {% set kwh_on = states('sensor.tou_exported_energy_daily_on_peak') | float(0) %}
+          {% set kwh_off = states('sensor.tou_exported_energy_daily_off_peak') | float(0) %}
+          {% set kwh_sop = states('sensor.tou_exported_energy_daily_super_off_peak') | float(0) %}
+          {{ (kwh_on * r_on + kwh_off * r_off + kwh_sop * r_sop) | round(2) }}
+
+      - name: TOU total solar savings today
+        unique_id: tou_total_solar_savings_today
+        unit_of_measurement: "$"
+        state: >
+          {{ (states('sensor.tou_solar_self_consumption_savings_today') | float(0)
+            + states('sensor.tou_solar_export_credit_today') | float(0)) | round(2) }}
+
+      - name: TOU net cost today
+        unique_id: tou_net_cost_today
+        unit_of_measurement: "$"
+        state: >
+          {{ (states('sensor.tou_import_cost_today') | float(0)
+            - states('sensor.tou_total_solar_savings_today') | float(0)) | round(2) }}
+
+      # Billing Cycle Summary Totals
+      - name: TOU solar production billing cycle
+        unique_id: tou_solar_production_billing_cycle
+        unit_of_measurement: "kWh"
+        device_class: energy
+        state: >
+          {{ (states('sensor.tou_solar_production_billing_cycle_on_peak') | float(0)
+            + states('sensor.tou_solar_production_billing_cycle_off_peak') | float(0)
+            + states('sensor.tou_solar_production_billing_cycle_super_off_peak') | float(0)) | round(3) }}
+
+      - name: TOU solar to house billing cycle
+        unique_id: tou_solar_to_house_billing_cycle
+        unit_of_measurement: "kWh"
+        device_class: energy
+        state: >
+          {{ (states('sensor.tou_solar_to_house_billing_cycle_on_peak') | float(0)
+            + states('sensor.tou_solar_to_house_billing_cycle_off_peak') | float(0)
+            + states('sensor.tou_solar_to_house_billing_cycle_super_off_peak') | float(0)) | round(3) }}
+
+      - name: TOU exported energy billing cycle
+        unique_id: tou_exported_energy_billing_cycle
+        unit_of_measurement: "kWh"
+        device_class: energy
+        state: >
+          {{ (states('sensor.tou_exported_energy_billing_cycle_on_peak') | float(0)
+            + states('sensor.tou_exported_energy_billing_cycle_off_peak') | float(0)
+            + states('sensor.tou_exported_energy_billing_cycle_super_off_peak') | float(0)) | round(3) }}
+
+      - name: TOU imported energy billing cycle
+        unique_id: tou_imported_energy_billing_cycle
+        unit_of_measurement: "kWh"
+        device_class: energy
+        state: >
+          {{ (states('sensor.tou_imported_energy_billing_cycle_on_peak') | float(0)
+            + states('sensor.tou_imported_energy_billing_cycle_off_peak') | float(0)
+            + states('sensor.tou_imported_energy_billing_cycle_super_off_peak') | float(0)) | round(3) }}
+
+      - name: TOU house energy billing cycle
+        unique_id: tou_house_energy_billing_cycle
+        unit_of_measurement: "kWh"
+        device_class: energy
+        state: >
+          {{ (states('sensor.tou_house_energy_billing_cycle_on_peak') | float(0)
+            + states('sensor.tou_house_energy_billing_cycle_off_peak') | float(0)
+            + states('sensor.tou_house_energy_billing_cycle_super_off_peak') | float(0)) | round(3) }}
+
+      # Solar Savings Calculations (Billing Cycle)
+      - name: TOU import cost billing cycle
+        unique_id: tou_import_cost_billing_cycle
+        unit_of_measurement: "$"
+        state: >
+          {% set on_peak = states('sensor.tou_imported_energy_billing_cycle_on_peak') | float(0) %}
+          {% set off_peak = states('sensor.tou_imported_energy_billing_cycle_off_peak') | float(0) %}
+          {% set super_off_peak = states('sensor.tou_imported_energy_billing_cycle_super_off_peak') | float(0) %}
+          {% set delivery = states('input_number.sdge_delivery_rate') | float(0) %}
+          {% set on_peak_rate = delivery + states('input_number.sdge_generation_on_peak') | float(0) %}
+          {% set off_peak_rate = delivery + states('input_number.sdge_generation_off_peak') | float(0) %}
+          {% set super_off_peak_rate = delivery + states('input_number.sdge_generation_super_off_peak') | float(0) %}
+          {{ (on_peak * on_peak_rate + off_peak * off_peak_rate + super_off_peak * super_off_peak_rate) | round(2) }}
+
+      - name: TOU solar self-consumption savings billing cycle
+        unique_id: tou_solar_self_consumption_savings_billing_cycle
+        unit_of_measurement: "$"
+        state: >
+          {% set del = states('input_number.sdge_delivery_rate') | float(0) %}
+          {% set r_on = del + states('input_number.sdge_generation_on_peak') | float(0) %}
+          {% set r_off = del + states('input_number.sdge_generation_off_peak') | float(0) %}
+          {% set r_sop = del + states('input_number.sdge_generation_super_off_peak') | float(0) %}
+          {% set kwh_on = states('sensor.tou_solar_to_house_billing_cycle_on_peak') | float(0) %}
+          {% set kwh_off = states('sensor.tou_solar_to_house_billing_cycle_off_peak') | float(0) %}
+          {% set kwh_sop = states('sensor.tou_solar_to_house_billing_cycle_super_off_peak') | float(0) %}
+          {{ (kwh_on * r_on + kwh_off * r_off + kwh_sop * r_sop) | round(2) }}
+
+      - name: TOU solar export credit billing cycle
+        unique_id: tou_solar_export_credit_billing_cycle
+        unit_of_measurement: "$"
+        state: >
+          {% set del = states('input_number.sdge_delivery_rate') | float(0) %}
+          {% set r_on = del + states('input_number.sdge_generation_on_peak') | float(0) %}
+          {% set r_off = del + states('input_number.sdge_generation_off_peak') | float(0) %}
+          {% set r_sop = del + states('input_number.sdge_generation_super_off_peak') | float(0) %}
+          {% set kwh_on = states('sensor.tou_exported_energy_billing_cycle_on_peak') | float(0) %}
+          {% set kwh_off = states('sensor.tou_exported_energy_billing_cycle_off_peak') | float(0) %}
+          {% set kwh_sop = states('sensor.tou_exported_energy_billing_cycle_super_off_peak') | float(0) %}
+          {{ (kwh_on * r_on + kwh_off * r_off + kwh_sop * r_sop) | round(2) }}
+
+      - name: TOU non bypassable charges billing cycle
+        unique_id: tou_non_bypassable_charges_billing_cycle
+        unit_of_measurement: "$"
+        state: >
+          {% set imported_kwh = states('sensor.tou_imported_energy_billing_cycle') | float(0) %}
+          {% set nbc_rate = states('input_number.sdge_nbc_rate') | float(0) %}
+          {{ (imported_kwh * nbc_rate) | round(2) }}
+
+      - name: TOU total solar savings billing cycle
+        unique_id: tou_total_solar_savings_billing_cycle
+        unit_of_measurement: "$"
+        state: >
+          {{ (states('sensor.tou_solar_self_consumption_savings_billing_cycle') | float(0)
+            + states('sensor.tou_solar_export_credit_billing_cycle') | float(0)) | round(2) }}
+
+      - name: TOU net cost billing cycle
+        unique_id: tou_net_cost_billing_cycle
+        unit_of_measurement: "$"
+        state: >
+          {{ (states('sensor.tou_import_cost_billing_cycle') | float(0)
+            - states('sensor.tou_total_solar_savings_billing_cycle') | float(0)) | round(2) }}
+
+      - name: TOU solar self-consumption savings monthly
+        unique_id: tou_solar_self_consumption_savings_monthly
+        unit_of_measurement: "$"
+        state: >
+          {% set del = states('input_number.sdge_delivery_rate') | float(0) %}
+          {% set r_on = del + states('input_number.sdge_generation_on_peak') | float(0) %}
+          {% set r_off = del + states('input_number.sdge_generation_off_peak') | float(0) %}
+          {% set r_sop = del + states('input_number.sdge_generation_super_off_peak') | float(0) %}
+          {% set kwh_on = states('sensor.tou_solar_to_house_monthly_on_peak') | float(0) %}
+          {% set kwh_off = states('sensor.tou_solar_to_house_monthly_off_peak') | float(0) %}
+          {% set kwh_sop = states('sensor.tou_solar_to_house_monthly_super_off_peak') | float(0) %}
+          {{ (kwh_on * r_on + kwh_off * r_off + kwh_sop * r_sop) | round(2) }}
+
+      - name: TOU solar export credit monthly
+        unique_id: tou_solar_export_credit_monthly
+        unit_of_measurement: "$"
+        state: >
+          {% set del = states('input_number.sdge_delivery_rate') | float(0) %}
+          {% set r_on = del + states('input_number.sdge_generation_on_peak') | float(0) %}
+          {% set r_off = del + states('input_number.sdge_generation_off_peak') | float(0) %}
+          {% set r_sop = del + states('input_number.sdge_generation_super_off_peak') | float(0) %}
+          {% set kwh_on = states('sensor.tou_exported_energy_monthly_on_peak') | float(0) %}
+          {% set kwh_off = states('sensor.tou_exported_energy_monthly_off_peak') | float(0) %}
+          {% set kwh_sop = states('sensor.tou_exported_energy_monthly_super_off_peak') | float(0) %}
+          {{ (kwh_on * r_on + kwh_off * r_off + kwh_sop * r_sop) | round(2) }}
+
+      - name: TOU total solar savings monthly
+        unique_id: tou_total_solar_savings_monthly
+        unit_of_measurement: "$"
+        state: >
+          {{ (states('sensor.tou_solar_self_consumption_savings_monthly') | float(0)
+            + states('sensor.tou_solar_export_credit_monthly') | float(0)) | round(2) }}
+
+      # Annual True-Up Summary Totals (SDG&E cycle resets August 1st)
+      - name: TOU imported energy trueup
+        unique_id: tou_imported_energy_trueup
+        unit_of_measurement: "kWh"
+        device_class: energy
+        state: >
+          {{ (states('sensor.tou_imported_energy_trueup_on_peak') | float(0)
+            + states('sensor.tou_imported_energy_trueup_off_peak') | float(0)
+            + states('sensor.tou_imported_energy_trueup_super_off_peak') | float(0)) | round(3) }}
+
+      - name: TOU house energy trueup
+        unique_id: tou_house_energy_trueup
+        unit_of_measurement: "kWh"
+        device_class: energy
+        state: >
+          {{ (states('sensor.tou_house_energy_trueup_on_peak') | float(0)
+            + states('sensor.tou_house_energy_trueup_off_peak') | float(0)
+            + states('sensor.tou_house_energy_trueup_super_off_peak') | float(0)) | round(3) }}
+
+      - name: TOU solar production trueup
+        unique_id: tou_solar_production_trueup
+        unit_of_measurement: "kWh"
+        device_class: energy
+        state: >
+          {{ (states('sensor.tou_solar_production_trueup_on_peak') | float(0)
+            + states('sensor.tou_solar_production_trueup_off_peak') | float(0)
+            + states('sensor.tou_solar_production_trueup_super_off_peak') | float(0)) | round(3) }}
+
+      - name: TOU exported energy trueup
+        unique_id: tou_exported_energy_trueup
+        unit_of_measurement: "kWh"
+        device_class: energy
+        state: >
+          {{ (states('sensor.tou_exported_energy_trueup_on_peak') | float(0)
+            + states('sensor.tou_exported_energy_trueup_off_peak') | float(0)
+            + states('sensor.tou_exported_energy_trueup_super_off_peak') | float(0)) | round(3) }}
+
+      - name: TOU solar to house trueup
+        unique_id: tou_solar_to_house_trueup
+        unit_of_measurement: "kWh"
+        device_class: energy
+        state: >
+          {{ (states('sensor.tou_solar_to_house_trueup_on_peak') | float(0)
+            + states('sensor.tou_solar_to_house_trueup_off_peak') | float(0)
+            + states('sensor.tou_solar_to_house_trueup_super_off_peak') | float(0)) | round(3) }}
+
+      - name: TOU import cost trueup
+        unique_id: tou_import_cost_trueup
+        unit_of_measurement: "$"
+        state: >
+          {% set on_peak = states('sensor.tou_imported_energy_trueup_on_peak') | float(0) %}
+          {% set off_peak = states('sensor.tou_imported_energy_trueup_off_peak') | float(0) %}
+          {% set super_off_peak = states('sensor.tou_imported_energy_trueup_super_off_peak') | float(0) %}
+          {% set delivery = states('input_number.sdge_delivery_rate') | float(0) %}
+          {% set on_peak_rate = delivery + states('input_number.sdge_generation_on_peak') | float(0) %}
+          {% set off_peak_rate = delivery + states('input_number.sdge_generation_off_peak') | float(0) %}
+          {% set super_off_peak_rate = delivery + states('input_number.sdge_generation_super_off_peak') | float(0) %}
+          {{ (on_peak * on_peak_rate + off_peak * off_peak_rate + super_off_peak * super_off_peak_rate) | round(2) }}
+
+      - name: TOU non bypassable charges trueup
+        unique_id: tou_non_bypassable_charges_trueup
+        unit_of_measurement: "$"
+        state: >
+          {% set imported_kwh = states('sensor.tou_imported_energy_trueup') | float(0) %}
+          {% set nbc_rate = states('input_number.sdge_nbc_rate') | float(0) %}
+          {{ (imported_kwh * nbc_rate) | round(2) }}
+
+      - name: TOU solar self-consumption savings trueup
+        unique_id: tou_solar_self_consumption_savings_trueup
+        unit_of_measurement: "$"
+        state: >
+          {% set del = states('input_number.sdge_delivery_rate') | float(0) %}
+          {% set r_on = del + states('input_number.sdge_generation_on_peak') | float(0) %}
+          {% set r_off = del + states('input_number.sdge_generation_off_peak') | float(0) %}
+          {% set r_sop = del + states('input_number.sdge_generation_super_off_peak') | float(0) %}
+          {% set kwh_on = states('sensor.tou_solar_to_house_trueup_on_peak') | float(0) %}
+          {% set kwh_off = states('sensor.tou_solar_to_house_trueup_off_peak') | float(0) %}
+          {% set kwh_sop = states('sensor.tou_solar_to_house_trueup_super_off_peak') | float(0) %}
+          {{ (kwh_on * r_on + kwh_off * r_off + kwh_sop * r_sop) | round(2) }}
+
+      - name: TOU solar export credit trueup
+        unique_id: tou_solar_export_credit_trueup
+        unit_of_measurement: "$"
+        state: >
+          {% set del = states('input_number.sdge_delivery_rate') | float(0) %}
+          {% set r_on = del + states('input_number.sdge_generation_on_peak') | float(0) %}
+          {% set r_off = del + states('input_number.sdge_generation_off_peak') | float(0) %}
+          {% set r_sop = del + states('input_number.sdge_generation_super_off_peak') | float(0) %}
+          {% set kwh_on = states('sensor.tou_exported_energy_trueup_on_peak') | float(0) %}
+          {% set kwh_off = states('sensor.tou_exported_energy_trueup_off_peak') | float(0) %}
+          {% set kwh_sop = states('sensor.tou_exported_energy_trueup_super_off_peak') | float(0) %}
+          {{ (kwh_on * r_on + kwh_off * r_off + kwh_sop * r_sop) | round(2) }}
+
+      - name: TOU total solar savings trueup
+        unique_id: tou_total_solar_savings_trueup
+        unit_of_measurement: "$"
+        state: >
+          {{ (states('sensor.tou_solar_self_consumption_savings_trueup') | float(0)
+            + states('sensor.tou_solar_export_credit_trueup') | float(0)) | round(2) }}
+
+      - name: TOU net cost trueup
+        unique_id: tou_net_cost_trueup
+        unit_of_measurement: "$"
+        state: >
+          {{ (states('sensor.tou_import_cost_trueup') | float(0)
+            - states('sensor.tou_total_solar_savings_trueup') | float(0)) | round(2) }}
+
+      # Reduce Your Use: live tracking of event-window grid import (4-9pm on event days only)
+      - name: SDG&E Reduce Your Use tracked kWh
+        unique_id: sdge_reduce_use_tracked_kwh
+        default_entity_id: sensor.sdg_e_reduce_your_use_tracked_kwh
+        unit_of_measurement: "kWh"
+        device_class: energy
+        state: >
+          {{ states('sensor.tou_imported_energy_reduce_use_event_event') | float(0) | round(3) }}
+        attributes:
+          note: "Gross grid import during event windows. SDG&E nets 15-minute intervals against export, so the bill can differ slightly."
+
+      - name: SDG&E Reduce Your Use tracked charge
+        unique_id: sdge_reduce_use_tracked_charge
+        default_entity_id: sensor.sdg_e_reduce_your_use_tracked_charge
+        unit_of_measurement: "$"
+        state: >
+          {{ (states('sensor.sdg_e_reduce_your_use_tracked_kwh') | float(0)
+            * states('input_number.sdge_reduce_use_billed_rate') | float(0)) | round(2) }}
+        attributes:
+          note: "Surcharge only; the normal on-peak energy cost for the same kWh is billed separately."
+
+      - name: SDG&E Reduce Your Use tracked charge today
+        unique_id: sdge_reduce_use_tracked_charge_today
+        default_entity_id: sensor.sdg_e_reduce_your_use_tracked_charge_today
+        unit_of_measurement: "$"
+        state: >
+          {{ (states('sensor.tou_imported_energy_reduce_use_daily_event') | float(0)
+            * states('input_number.sdge_reduce_use_billed_rate') | float(0)) | round(2) }}
+        attributes:
+          note: "Surcharge only for today's event window; the normal on-peak energy cost for the same kWh is billed separately."
+      - name: SDG&E Reduce Your Use calculated charge
+        unique_id: sdge_reduce_use_calculated_charge
+        default_entity_id: sensor.sdg_e_reduce_your_use_calculated_charge
+        unit_of_measurement: "$"
+        state: >
+          {{ (states('input_number.sdge_reduce_use_event_kwh') | float(0)
+            * states('input_number.sdge_reduce_use_billed_rate') | float(0)) | round(2) }}
+
+      - name: SDG&E Reduce Your Use charge variance
+        unique_id: sdge_reduce_use_charge_variance
+        default_entity_id: sensor.sdg_e_reduce_your_use_charge_variance
+        unit_of_measurement: "$"
+        state: >
+          {{ (states('sensor.sdg_e_reduce_your_use_calculated_charge') | float(0)
+            - states('input_number.sdge_reduce_use_actual_charge') | float(0)) | round(2) }}

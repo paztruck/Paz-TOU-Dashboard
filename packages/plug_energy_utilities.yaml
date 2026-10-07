@@ -1,0 +1,156 @@
+utility_meter:
+  paz_workbench_energy_daily:
+    source: sensor.paz_workbench_summation_delivered
+    name: WorkBench Energy Daily
+    cycle: daily
+  paz_workbench_energy_weekly:
+    source: sensor.paz_workbench_summation_delivered
+    name: WorkBench Energy Weekly
+    cycle: weekly
+  paz_workbench_energy_monthly:
+    source: sensor.paz_workbench_summation_delivered
+    name: WorkBench Energy Monthly
+    cycle: monthly
+
+  paz_garage_freezer_energy_daily:
+    source: sensor.paz_garage_freezer_summation_delivered
+    name: Garage Freezer Energy Daily
+    cycle: daily
+  paz_garage_freezer_energy_weekly:
+    source: sensor.paz_garage_freezer_summation_delivered
+    name: Garage Freezer Energy Weekly
+    cycle: weekly
+  paz_garage_freezer_energy_monthly:
+    source: sensor.paz_garage_freezer_summation_delivered
+    name: Garage Freezer Energy Monthly
+    cycle: monthly
+
+  communications_stack_energy_daily:
+    source: sensor.third_reality_inc_3rsp02064z_summation_delivered_3
+    name: Communications Stack Energy Daily
+    cycle: daily
+  communications_stack_energy_weekly:
+    source: sensor.third_reality_inc_3rsp02064z_summation_delivered_3
+    name: Communications Stack Energy Weekly
+    cycle: weekly
+  communications_stack_energy_monthly:
+    source: sensor.third_reality_inc_3rsp02064z_summation_delivered_3
+    name: Communications Stack Energy Monthly
+    cycle: monthly
+
+  entertainment_system_energy_daily:
+    source: sensor.third_reality_inc_3rsp02064z_summation_delivered_2
+    name: Entertainment System Energy Daily
+    cycle: daily
+  entertainment_system_energy_weekly:
+    source: sensor.third_reality_inc_3rsp02064z_summation_delivered_2
+    name: Entertainment System Energy Weekly
+    cycle: weekly
+  entertainment_system_energy_monthly:
+    source: sensor.third_reality_inc_3rsp02064z_summation_delivered_2
+    name: Entertainment System Energy Monthly
+    cycle: monthly
+
+  big_ac_energy_daily:
+    source: sensor.man_cave_tv_room_big_a_c_summation_delivered
+    name: Big AC Energy Daily
+    cycle: daily
+  big_ac_energy_weekly:
+    source: sensor.man_cave_tv_room_big_a_c_summation_delivered
+    name: Big AC Energy Weekly
+    cycle: weekly
+  big_ac_energy_monthly:
+    source: sensor.man_cave_tv_room_big_a_c_summation_delivered
+    name: Big AC Energy Monthly
+    cycle: monthly
+
+  paz_computer_energy_daily:
+    source: sensor.third_reality_inc_3rsp02064z_summation_delivered_4
+    name: Paz Computer Energy Daily
+    cycle: daily
+  paz_computer_energy_weekly:
+    source: sensor.third_reality_inc_3rsp02064z_summation_delivered_4
+    name: Paz Computer Energy Weekly
+    cycle: weekly
+  paz_computer_energy_monthly:
+    source: sensor.third_reality_inc_3rsp02064z_summation_delivered_4
+    name: Paz Computer Energy Monthly
+    cycle: monthly
+
+  refrigerator_energy_daily:
+    source: sensor.third_reality_inc_3rsp02064z_summation_delivered
+    name: Refrigerator Energy Daily
+    cycle: daily
+  refrigerator_energy_weekly:
+    source: sensor.third_reality_inc_3rsp02064z_summation_delivered
+    name: Refrigerator Energy Weekly
+    cycle: weekly
+  refrigerator_energy_monthly:
+    source: sensor.third_reality_inc_3rsp02064z_summation_delivered
+    name: Refrigerator Energy Monthly
+    cycle: monthly
+
+  aquarium_energy_daily:
+    source: sensor.aquarium_summation_delivered
+    name: Aquarium Energy Daily
+    cycle: daily
+  aquarium_energy_weekly:
+    source: sensor.aquarium_summation_delivered
+    name: Aquarium Energy Weekly
+    cycle: weekly
+  aquarium_energy_monthly:
+    source: sensor.aquarium_summation_delivered
+    name: Aquarium Energy Monthly
+    cycle: monthly
+
+  small_microwave_energy_daily:
+    source: sensor.kitchen_microwave_keurig_small_microwave_summation_2
+    name: Small Microwave Energy Daily
+    cycle: daily
+  small_microwave_energy_weekly:
+    source: sensor.kitchen_microwave_keurig_small_microwave_summation_2
+    name: Small Microwave Energy Weekly
+    cycle: weekly
+  small_microwave_energy_monthly:
+    source: sensor.kitchen_microwave_keurig_small_microwave_summation_2
+    name: Small Microwave Energy Monthly
+    cycle: monthly
+
+  keurig_energy_daily:
+    source: sensor.kitchen_microwave_keurig_keurig_summation_delivered
+    name: Keurig Energy Daily
+    cycle: daily
+  keurig_energy_weekly:
+    source: sensor.kitchen_microwave_keurig_keurig_summation_delivered
+    name: Keurig Energy Weekly
+    cycle: weekly
+  keurig_energy_monthly:
+    source: sensor.kitchen_microwave_keurig_keurig_summation_delivered
+    name: Keurig Energy Monthly
+    cycle: monthly
+
+  master_bedroom_ac_energy_daily:
+    source: sensor.master_bedroom_window_a_c_summation_delivered
+    name: Master Bedroom AC Energy Daily
+    cycle: daily
+  master_bedroom_ac_energy_weekly:
+    source: sensor.master_bedroom_window_a_c_summation_delivered
+    name: Master Bedroom AC Energy Weekly
+    cycle: weekly
+  master_bedroom_ac_energy_monthly:
+    source: sensor.master_bedroom_window_a_c_summation_delivered
+    name: Master Bedroom AC Energy Monthly
+    cycle: monthly
+
+  mario_bedroom_ac_energy_daily:
+    source: sensor.mario_bedroom_mario_bedroom_a_c_summation_delivered
+    name: Mario Bedroom AC Energy Daily
+    cycle: daily
+  mario_bedroom_ac_energy_weekly:
+    source: sensor.mario_bedroom_mario_bedroom_a_c_summation_delivered
+    name: Mario Bedroom AC Energy Weekly
+    cycle: weekly
+  mario_bedroom_ac_energy_monthly:
+    source: sensor.mario_bedroom_mario_bedroom_a_c_summation_delivered
+    name: Mario Bedroom AC Energy Monthly
+    cycle: monthly
