@@ -7,6 +7,7 @@ The HA-SE-Energy project is designed to integrate solar energy management into t
 The project consists of the following files:
 
 - **packages/electricity.yaml**: Configuration for sensors related to solar energy production, consumption, and battery management. This file defines multiple sensors with their states, availability, and calculations based on other sensor readings.
+- **packages/cooktop.yaml**: Cooktop power monitoring, monthly TOU energy tracking, and a high-power notification.
 
 - **configuration.yaml**: The main configuration file for the Home Assistant setup. It includes settings for integrations, components, and other configurations necessary for the Home Assistant environment.
 

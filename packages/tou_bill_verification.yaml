@@ -127,6 +127,7 @@ automation:
           entity_id:
             - select.tou_imported_energy_daily
             - select.tou_house_energy_daily
+            - select.tou_cooktop_energy_monthly
         data:
           option: "{{ tariff | trim }}"
 
