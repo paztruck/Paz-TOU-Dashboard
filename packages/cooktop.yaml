@@ -45,7 +45,7 @@ automation:
       - action: notify.send_message
         metadata: {}
         target:
-          device_id: 130023f6edacc527b419d41aee12a715
+          device_id: !secret phone_device_id
         data:
           title: "Cooktop near its 30A limit"
           message: >-
