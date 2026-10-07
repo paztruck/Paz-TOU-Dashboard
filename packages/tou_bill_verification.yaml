@@ -410,6 +410,7 @@ automation:
             - select.tou_solar_production_monthly
             - select.tou_exported_energy_monthly
             - select.tou_solar_to_house_monthly
+            - select.tou_cooktop_energy_monthly
 
   - id: tou_manual_billing_reset
     alias: TOU manual billing cycle reset
@@ -434,6 +435,7 @@ automation:
             - select.tou_solar_production_monthly
             - select.tou_exported_energy_monthly
             - select.tou_solar_to_house_monthly
+            - select.tou_cooktop_energy_monthly
 
   - id: tou_archive_annual_trueup
     alias: TOU archive annual true-up
